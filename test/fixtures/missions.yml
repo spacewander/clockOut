@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  days: 1
+  finished_days: 1
+  missed_days: 1
+  drop_out_days: 1
+  percents: 1.5
+  drop_out_limit: 1
+  content: MyText
+  finished: false
+  aborted: false
+  public: false
+  user_id: 1
+
+two:
+  name: MyString
+  days: 1
+  finished_days: 1
+  missed_days: 1
+  drop_out_days: 1
+  percents: 1.5
+  drop_out_limit: 1
+  content: MyText
+  finished: false
+  aborted: false
+  public: false
+  user_id: 1

@@ -4,8 +4,12 @@ source 'http://ruby.taobao.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.4'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
-gem 'mysql2'
+group :test do
+  gem 'sqlite3'
+end
+group :development, :product do
+  gem 'mysql2'
+end
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
@@ -29,7 +33,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 
 # Use ActiveModel has_secure_password
- gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1.7'
 
 # Use unicorn as the app server
 # gem 'unicorn'
@@ -38,7 +42,7 @@ gem 'spring',        group: :development
 # gem 'capistrano-rails', group: :development
 
 # Use debugger
- gem 'byebug', '~> 3.2.0', group: [:development, :test]
+gem 'byebug', '~> 3.2.0', group: [:development, :test]
 
 # for bootstrap
 gem 'bootstrap-sass', '~> 3.2.0'
@@ -50,4 +54,7 @@ gem 'bootstrap_helper'
 group :test, :development do
     gem 'jasmine-rails'
 end
+
+# for admin
+gem 'rails_admin'
 
