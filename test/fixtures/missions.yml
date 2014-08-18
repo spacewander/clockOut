@@ -2,11 +2,11 @@
 
 one:
   name: MyString
-  days: 1
+  days: 30
   finished_days: 1
   missed_days: 1
+  missed_limit: 1
   drop_out_days: 1
-  percents: 1.5
   drop_out_limit: 1
   content: MyText
   finished: false
@@ -20,7 +20,6 @@ two:
   finished_days: 1
   missed_days: 1
   drop_out_days: 1
-  percents: 1.5
   drop_out_limit: 1
   content: MyText
   finished: false

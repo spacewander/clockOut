@@ -4,24 +4,24 @@ one:
   id: 1
   name: MyString
   sex: MyString
-  year: 1
-  date: MyString
+  year: 1999
+  date: 09-21
   password_hash: MyString
   salt: MyString
   join_date: 2014-08-17
-  email: MyString
+  email: a@123.com
   last_actived: 2014-08-17
   member_no: 1
 
-two:
-  id: 1
-  name: MyString
-  sex: MyString
-  year: 1
-  date: MyString
-  password_hash: MyString
-  salt: MyString
-  join_date: 2014-08-17
-  email: MyString
+wrong:
+  id: 2
+  name: wrong
+  sex: male
+  year: 2000
+  date: 02-28
+  password_hash: haha
+  salt: wowo
+  join_date: 2014-07-11
+  email: 444@tmail.com
   last_actived: 2014-08-17
-  member_no: 1
+  member_no: 3

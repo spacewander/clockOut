@@ -7,4 +7,14 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  def assert_invalid object, item
+    assert object.invalid?
+    assert object.errors[item.to_sym].any?
+  end
+
+  def assert_valid object, item = ''
+    object.valid?
+    assert_equal(object.errors[item.to_sym], []) if item
+  end
+
 end
