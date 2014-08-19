@@ -1,3 +1,4 @@
+# 用户类
 class User < ActiveRecord::Base
   has_many :missions, :dependent => :destroy
   has_many :supervisions
@@ -21,6 +22,7 @@ class User < ActiveRecord::Base
 
   validate :date_cannot_be_invalid
 
+  # 验证日期是否是合法的
   def date_cannot_be_invalid
     month, day = date.split('-')
     day = day.to_i()
@@ -35,6 +37,8 @@ class User < ActiveRecord::Base
         else
           correct = (0 < day) && (day <= 28)
         end
+      else
+        correct = false
     end
     errors.add(:date, '出生日期有问题！') if !correct
   end

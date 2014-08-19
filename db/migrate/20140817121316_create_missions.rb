@@ -3,6 +3,7 @@ class CreateMissions < ActiveRecord::Migration
     create_table :missions do |t|
       t.string :name, :null => false, :default => ""
       t.integer :days, :null => false, :default => 30
+      # 无需创建日期字段，从created_at获取即可
       t.integer :finished_days
       t.integer :missed_days
       t.integer :missed_limit, :null => false, :default => 10

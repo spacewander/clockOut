@@ -1,3 +1,7 @@
+# 打卡项目
+# 打卡前必填：项目名称，持续天数，中途允许缺勤天数，允许连续缺勤天数
+# 选填：描述性内容
+# 打卡项目可以选择是否公开，公开的项目将显示于个人主页
 class Mission < ActiveRecord::Base
   belongs_to :user
   has_many :supervisions
