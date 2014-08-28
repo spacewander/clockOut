@@ -1,3 +1,5 @@
+require 'digest/sha2'
+
 # 用户类
 class User < ActiveRecord::Base
   has_many :missions, :dependent => :destroy
@@ -6,17 +8,24 @@ class User < ActiveRecord::Base
   has_many :participantions
   has_and_belongs_to_many :groups
 
-  validates :name, :email, :password_hash, presence: true
+  validates :name, :email, :password, presence: true
   validates :name, :email, uniqueness: true
   validates :name, length: { maximum: 30,
     too_long: "用户名长度不能超过%{count}个字符" }
   # 注，在保存用户名之前去掉两端的空白
 
+  validates :password, :confirmation => true
+  attr_reader :password
+  attr_accessor :password_confirmation
+  @global_hash = 'clockOut'
+
   validates :email, format: { with: /\A\w+@\w+(?:\.[a-zA-Z]+)+\z/ }
   validates :year, numericality: { only_integer: true, 
-    greater_than: 1900, message: "出生年份不能早于%{count}",
-    less_than_or_equal_to: 2014, message: "出生年份不能晚于%{count}"}
-  validates :date, format: { with: /\A\d\d-\d\d\z/ }
+    greater_than: 1900, message: "出生年份不能早于1900",
+    less_than_or_equal_to: 2014, message: "出生年份过晚"}, 
+    if: Proc.new {|user| user.year}
+  validates :date, format: { with: /\A\d\d-\d\d\z/ } ,
+    if: Proc.new {|user| user.date}
   validates :member_no, uniqueness: true
   validates :member_no, numericality: { only_integer: true, greater_than: 0 }
 
@@ -24,6 +33,8 @@ class User < ActiveRecord::Base
 
   # 验证日期是否是合法的
   def date_cannot_be_invalid
+    return unless date
+
     month, day = date.split('-')
     day = day.to_i()
     case month
@@ -42,5 +53,36 @@ class User < ActiveRecord::Base
     end
     errors.add(:date, '出生日期有问题！') if !correct
   end
-end
 
+  def self.authenticate(name, password)
+    if user = find_by_name(name)
+      if user.password_hash == encrypt_password(password, user.salt)
+        user
+      end
+    end
+  end
+
+  def password=(password)
+    @password = password
+
+    if password.present?
+      generate_salt
+      self.password_hash = self.class.encrypt_password(password, salt)
+    end
+  end
+
+  private
+
+  def password_given
+    errors.add(:password, "请输入密码") unless password_hash.present?
+  end
+
+  def self.encrypt_password(password, salt)
+    Digest::SHA2.hexdigest(password + @global_hash + salt)[0, 32]
+  end
+
+  def generate_salt
+    self.salt = self.object_id.to_s + rand(36 ** 4).to_s(36)
+  end
+
+end

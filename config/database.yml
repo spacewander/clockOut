@@ -29,6 +29,10 @@ test:
   pool: 5
   username: lzx
   host: localhost
+  # maybe something wrong with rails' convension
+  # also see http://stackoverflow.com/questions/21590720/why-activerecordstatementinvalid-sqlite3sqlexception-near-syntax-erro
+  #<<: *default
+  #database: db/test.sqlite3
 
 production:
   <<: *default

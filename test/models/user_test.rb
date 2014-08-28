@@ -22,8 +22,12 @@ class UserTest < ActiveSupport::TestCase
     assert_invalid(user, 'name')
     user.name = 'a'
     assert_valid(user)
+    user.password = ""
     user.password_hash = ""
-    assert_invalid(user, 'password_hash')
+    assert_invalid(user, 'password')
+    # then give a hash_password field
+    user.password_hash = "ZSDAS"
+    assert_valid(user)
   end
 
   test "email is valid" do
