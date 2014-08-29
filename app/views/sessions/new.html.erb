@@ -1,2 +1,19 @@
-<h1>Sessions#new</h1>
-<p>Find me in app/views/sessions/new.html.erb</p>
+<% @title = '欢迎使用clockOut - 登录' %>
+<h1>登录</h1>
+<div class="login">
+  <% if flash[:notice] %>
+    <p id='notice'><%= flash[:notice] %></p>
+  <% end %>
+
+  <%= form_tag do %>
+    <fieldset>
+      <legend>登录</legend>
+
+      <div>
+        <label for="name">用户名： </label>
+        <%= text_field_tag :name, params[:name] %>
+      </div>
+    </fieldset>
+  <% end %>
+
+</div>

@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ClockOut</title>
+<title><%= @title or 'clockOut' %></title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<%= render_body_tag %>
+<%#在用户登录后显示导航条%>
+<%= yield :navbar %>
 
 <%= yield %>
-
+<%#对于用户正在监督的打卡和参加的活动，显示在右侧的边框中，大概占页面六分之一%>
+<%= yield :sidebar %>
 </body>
 </html>

@@ -53,6 +53,7 @@ gem 'bootstrap_helper'
 # for test
 group :test, :development do
     gem 'jasmine-rails'
+    gem 'jasmine-jquery-rails'
 end
 
 # for admin
