@@ -1,6 +1,11 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
+  # 各种操作（除了创建用户以外）都需要用户登录
+  before_filter :has_logined, except: [:new, :create]
+  # 有些操作只允许对自己的页面进行
+  before_filter :is_hoster, only: [:edit, :update, :destroy]
+
   # GET /users
   # GET /users.json
   def index
@@ -14,6 +19,14 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    @user = User.find(params[:id])
+    # 找不到该用户
+    return not_found() unless @user
+    
+    # 是访客而非页面的主人
+    @user.is_visitor = true if session[:user_id] != params[:id]
+    
+    render
   end
 
   # GET /users/new
@@ -80,6 +93,18 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:id, :name, :sex, :year, :date, 
                                    :password, :password_confirmation, :email)
+    end
+
+    # 只有是页面主人才能提交修改
+    def is_hoster
+      if session[:user_id] != params[:id]
+        respond_to do |format|
+          format.json { render json: {:msg => "unauthentication"}, 
+                        status: :forbidden}
+          format.html { redirect_to :status => :forbidden  }
+        end
+        return
+      end
     end
 
 end

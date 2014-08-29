@@ -25,3 +25,11 @@ wrong:
   email: 444@tmail.com
   last_actived: 2014-08-17
   member_no: 2
+
+<% SALT = 'asdfgh' unless defined?(SALT)%>
+session:
+  id: 3
+  name: lzx
+  password_hash: <%= User.encrypt_password('mima', SALT)%>
+  salt: <%= SALT %>
+  email: test@gmail.com

@@ -71,6 +71,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  # 标记浏览某个用户的主页的人是否是该用户，如果不是，那么就是visitor
+  def is_visitor=(is_visitor)
+    @is_visitor = is_visitor
+  end
+
   private
 
   def password_given
