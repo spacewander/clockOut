@@ -49,6 +49,7 @@ gem 'bootstrap-sass', '~> 3.2.0'
 gem 'autoprefixer-rails'
 gem 'will_paginate-bootstrap'
 gem 'bootstrap_helper'
+gem 'bootstrap_form'
 
 # for test
 group :test, :development do

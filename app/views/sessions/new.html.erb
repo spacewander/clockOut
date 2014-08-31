@@ -1,19 +1,36 @@
 <% @title = '欢迎使用clockOut - 登录' %>
-<h1>登录</h1>
-<div class="login">
-  <% if flash[:notice] %>
-    <p id='notice'><%= flash[:notice] %></p>
-  <% end %>
 
-  <%= form_tag do %>
-    <fieldset>
-      <legend>登录</legend>
+<% content_for(:javascript) do %>
+  <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => true %>
+<% end %>
 
-      <div>
-        <label for="name">用户名： </label>
-        <%= text_field_tag :name, params[:name] %>
+<!-- modal -->
+<div class="login modal fade" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true" id="login-modal" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title">登录
+          <small  class="toRegister">
+            或<a href="/users/new">注册</a>
+          </small>
+        </h1>
+        <% if flash[:notice] %>
+          <p id='error'><%= flash[:notice] %></p>
+        <% end %>
+        <p id="notice"></p>
       </div>
-    </fieldset>
-  <% end %>
-
-</div>
+      
+      <div class="modal-body">
+        <div class="login-form">
+          <%= bootstrap_form_tag url: '/login' do |f| %>
+            <%= f.text_field :name, label: '用户名' %>
+            <%= f.password_field :password, label: '密码' %>
+            <%= f.check_box :remember_me, label: '记住我' %>
+            <%= f.submit "登录" %>
+          <% end %>
+        </div>
+      </div>
+      
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
