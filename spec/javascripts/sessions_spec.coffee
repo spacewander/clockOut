@@ -17,14 +17,14 @@ describe 'login page: ', () ->
       """)
 
   it "should check for empty username", () ->
-    Sessions.bindUsernameChecker()
+    FormHelper.bindUsernameChecker()
     $('input[name=name]').val('')
     $('input[name=commit]').click()
     expect($('#notice').text()).toBe('用户名不能为空')
     expect($('#error')).toBeHidden()
 
   it "should check for empty username", () ->
-    Sessions.bindPasswordChecker()
+    FormHelper.bindPasswordChecker()
     $('input[name=password]').val('')
     $('input[name=commit]').click()
     expect($('#notice').text()).toBe('密码不能为空')

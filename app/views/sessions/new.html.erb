@@ -25,7 +25,7 @@
           <%= bootstrap_form_tag url: '/login' do |f| %>
             <%= f.text_field :name, label: '用户名' %>
             <%= f.password_field :password, label: '密码' %>
-            <%= f.check_box :remember_me, label: '记住我' %>
+            <%= f.check_box :remember_me, label: '记住我', checked: true %>
             <%= f.submit "登录" %>
           <% end %>
         </div>

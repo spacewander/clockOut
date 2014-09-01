@@ -43,10 +43,15 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
 
-    @user.member_no = User.all().last().id
-    @user.member_no ||= 0
+    if lastUser = User.all().last()
+      @user.member_no = lastUser.id
+    else
+      @user.member_no = 0
+    end
     @user.member_no += 1
     @user.join_date = Date.today.to_s
+
+    @user.sex = "" if @user.sex.nil? # 设置为默认值
 
     respond_to do |format|
       if @user.save

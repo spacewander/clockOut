@@ -1,61 +1,32 @@
-<%= form_for(@user) do |f| %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+<%= bootstrap_form_for(@user) do |f| %>
+  <div class="field">
+    <%= f.email_field :email, :label => '邮箱' %>
+  </div>
+  <div class="field">
+    <%= f.text_field :name, :size => 30, :label => '用户名' %>
+  </div>
+  <div class="field">
+    <%= f.password_field :password, :size => 30, :label => '密码' %>
+  </div>
+  <div class="field">
+    <%= f.password_field :password_confirmation, :size => 30, :label => '确认密码' %>
+  </div>
+  <div class="field">
+    <%= f.form_group :sex, label: { text: "性别(选填)" } do %>
+      <%= f.radio_button :sex, "男", label: "男", inline: true %>
+      <%= f.radio_button :sex, "女", label: "女", inline: true  %>
+      <%= f.radio_button :sex, "其他", label: "其他", inline: true  %>
+      <%= f.radio_button :sex, "", label: "不告诉你", inline: true  %>
+    <% end %>
+  </div>
+  <div class="field">
+    <%= f.select :year, (1900..Date.today.year), :selected => 1994, :label => '出生年份(选填)' %>
+  </div>
+  <div class="field">
+    <%= f.text_field :date, :size => 5, :label => '出生日期(选填)', :placeholder => 'mm-dd' %>
+  </div>
 
-      <ul>
-      <% @user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :id %><br>
-    <%= f.number_field :id %>
-  </div>
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :sex %><br>
-    <%= f.text_field :sex %>
-  </div>
-  <div class="field">
-    <%= f.label :year %><br>
-    <%= f.number_field :year %>
-  </div>
-  <div class="field">
-    <%= f.label :date %><br>
-    <%= f.text_field :date %>
-  </div>
-  <div class="field">
-    <%= f.label :password_hash %><br>
-    <%= f.text_field :password_hash %>
-  </div>
-  <div class="field">
-    <%= f.label :salt %><br>
-    <%= f.text_field :salt %>
-  </div>
-  <div class="field">
-    <%= f.label :join_date %><br>
-    <%= f.date_select :join_date %>
-  </div>
-  <div class="field">
-    <%= f.label :email %><br>
-    <%= f.text_field :email %>
-  </div>
-  <div class="field">
-    <%= f.label :last_actived %><br>
-    <%= f.date_select :last_actived %>
-  </div>
-  <div class="field">
-    <%= f.label :member_no %><br>
-    <%= f.number_field :member_no %>
-  </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit '注册' %>
   </div>
 <% end %>

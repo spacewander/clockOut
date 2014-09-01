@@ -8,35 +8,45 @@ class User < ActiveRecord::Base
   has_many :participantions
   has_and_belongs_to_many :groups
 
-  validates :name, :email, :password, presence: true
-  validates :name, :email, uniqueness: true
+  validates :name, :email, :presence => { message: '不能为空！'}
+  validates :name, :email, :uniqueness => { message: '已经被人抢注了，换一个吧'}
   validates :name, length: { maximum: 30,
     too_long: "用户名长度不能超过%{count}个字符" }
   # 注，在保存用户名之前去掉两端的空白
 
-  validates :password, :confirmation => true
+  validates :password, :confirmation => { message: '跟密码不匹配啊' }
+  validate :password_given
   attr_reader :password
   attr_accessor :password_confirmation
   @global_hash = 'clockOut'
 
-  validates :email, format: { with: /\A\w+@\w+(?:\.[a-zA-Z]+)+\z/ }
+  validates :email, format: { with: /\A\w+@\w+(?:\.[a-zA-Z]+)+\z/, 
+    message: "邮箱地址不正确！"}, 
+    if: Proc.new {|user| user.email.presence}
   validates :year, numericality: { only_integer: true, 
     greater_than: 1900, message: "出生年份不能早于1900",
     less_than_or_equal_to: 2014, message: "出生年份过晚"}, 
-    if: Proc.new {|user| user.year}
-  validates :date, format: { with: /\A\d\d-\d\d\z/ } ,
-    if: Proc.new {|user| user.date}
+    if: Proc.new {|user| user.year.presence}
+  validates :date, format: { with: /\A\d\d-\d\d\z/,
+    message: '格式不对啊！'} ,
+    if: Proc.new {|user| user.date.presence}
   validates :member_no, uniqueness: true
   validates :member_no, numericality: { only_integer: true, greater_than: 0 }
 
   validate :date_cannot_be_invalid
 
+  validates :sex, inclusion: { in: ['男', '女', '其他', ''],
+    message: "呃……请问你真的是这个性别么？"}, 
+    if: Proc.new {|user| user.sex.presence }
+
   # 验证日期是否是合法的
   def date_cannot_be_invalid
-    return unless date
+    return unless date.presence
 
     month, day = date.split('-')
     day = day.to_i()
+
+    correct = true
     case month
       when '01', '03', '05', '07', '08', '10', '12'
       correct = (0 < day) && (day <= 31)
@@ -51,7 +61,7 @@ class User < ActiveRecord::Base
       else
         correct = false
     end
-    errors.add(:date, '出生日期有问题！') if !correct
+    errors.add(:date, '出生日期有问题！') unless correct
   end
 
   def self.authenticate(name, password)

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root :to => 'sessions#new', :as => 'login'
+  root :to => 'sessions#index'
 
   controller :sessions do
     get 'login' => :new

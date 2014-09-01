@@ -1,12 +1,17 @@
 # 会话控制器，管理用户登录和登出
 class SessionsController < ApplicationController
-  # GET / or GET /login
-  def new
-    if user_id = session[:user_id]
+  # GET / 
+  def index
+    if session[:user_id]
       redirect_to user_path(user_id)
     else
-      render 
+      redirect_to login_url
     end
+  end
+
+  # GET /login
+  def new
+    render 
   end
 
   # POST /login
