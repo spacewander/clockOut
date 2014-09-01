@@ -51,12 +51,6 @@ gem 'will_paginate-bootstrap'
 gem 'bootstrap_helper'
 gem 'bootstrap_form'
 
-# for test
-group :test, :development do
-    gem 'jasmine-rails'
-    gem 'jasmine-jquery-rails'
-end
-
 # for admin
 gem 'rails_admin'
 

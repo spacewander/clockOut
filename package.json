@@ -1,0 +1,22 @@
+{
+  "name": "clockOut",
+  "version": "0.0.0",
+  "description": "clockOut",
+  "scripts": {
+    "test": "./test_js.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spacewander/clockOut.git"
+  },
+  "keywords": [
+    "打卡"
+  ],
+  "author": "spacewander",
+  "devDependencies": {
+    " karma-jasmine": "~1.5.0",
+    "karma": "~0.12.17",
+    "karma-phantomjs-launcher": "~0.1.4",
+    "karma-coffee-preprocessor": "~0.1"
+  }
+}
