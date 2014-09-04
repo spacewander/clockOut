@@ -2,12 +2,16 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
+  <meta name="keywords" content="clockOut 打卡">
+  <meta name="description" content="clockOut是一个为你提供打卡环境的网站，激励你天天向上，改掉缺点， 实现目标">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= @title or 'clockOut' %></title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= yield :javascript %>
   <%= csrf_meta_tags %>
+  <%= favicon_link_tag 'favicon.ico' %>
+  <%= button_to "logout", logout_path, :method => :delete %>
 </head>
 <%= render_body_tag %>
   <%#在用户登录后显示导航条%>
