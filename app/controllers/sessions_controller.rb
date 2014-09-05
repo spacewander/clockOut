@@ -19,6 +19,7 @@ class SessionsController < ApplicationController
     user = User.authenticate(params[:name], params[:password])
     if user
       session[:user_id] = user.id
+      push_navbar_info_to_session(user)
       return redirect_to :back if params[:back]
 
       redirect_to user_path(user.id)
@@ -29,7 +30,7 @@ class SessionsController < ApplicationController
 
   # DELETE /logout
   def destroy
-    session[:user_id] = nil
+    clean_sessions
     redirect_to login_url
   end
 

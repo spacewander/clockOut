@@ -1,6 +1,7 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+/* about new user */
 #new_user {
   padding-bottom: 20px;
 }
@@ -76,4 +77,117 @@ span.created-missions {
 .progress {
   // 这个变量不能定制，所以就直接覆盖掉它
   margin-bottom: 0 !important; 
+}
+
+/* about navbar */
+$navbar_half_size : 8px;
+
+.navbar-btn-groups {
+  margin-bottom: $navbar_half_size;
+  margin-top: $navbar_half_size;
+  
+  $navbtn-margin : 25px;
+  @media (max-width: 768px) {
+    $navbtn-margin : 0px;
+  }
+  
+  & > .btn-group {
+    font-size: 20px;
+  }
+  
+  & > .btn-group:first-child {
+    margin-left: $navbtn-margin;
+  }
+  & > .btn-group:last-child {
+    margin-right: $navbtn-margin + 60px;
+    @media (max-width: 1170px) {
+      margin-right: $navbtn-margin;
+    }
+  }
+}
+
+.navbar-list {
+  width: 80%;
+  padding: 0 0;
+  
+  $list_margin : 0px;
+  
+  & > li {
+    top: 15px;
+    margin: 0 $list_margin;
+    font-size: 20px;
+    
+    @media (max-width: 480px) {
+      width: 100%;
+      margin: 5px 0;
+    }
+    
+    & > a {
+      color: #000 !important;
+      // reset top
+      top: -16px;
+      
+      @media (max-width: 480px) {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  & > .navbar-name {
+//    margin-left: $list_margin + 55px;
+//    margin-right: $list_margin + 55px;
+    color: #000;
+  }
+  
+}
+
+
+@media (max-width: 768px) {
+  .navbar-list {
+    width: 100%;
+    padding: 0 0;
+
+  //  $list_margin : 50px;
+    $list_margin : 0px;
+
+    & > li {
+      margin: 0 0;
+      top: 0;
+      font-size: 20px;
+
+      & > a {
+        color: #000 !important;
+        top: 0;
+      }
+    }
+
+    & > .navbar-name {
+      color: #000;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    
+    & > .navbar-num {
+      top: 10px;
+      @media (max-width: 480px) {
+        top: 0;
+        padding-left: 30px;
+      }
+    }
+  }
+}
+
+// 跟导航条的配置变量一样，因为scss中不能导入单个变量，所以这里重复下
+$navbar-default-bg : rgb(248, 247, 243);
+.nav-one {
+  background-color: adjust-color($navbar-default-bg, $lightness: 30%) !important;
+}
+
+.nav-two {
+  background-color: $navbar-default-bg !important;
+}
+
+.nav-three {
+  background-color: adjust-color($navbar-default-bg, $lightness: -30%) !important;
 }

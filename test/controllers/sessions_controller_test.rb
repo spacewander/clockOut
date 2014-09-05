@@ -10,7 +10,7 @@ class SessionsControllerTest < ActionController::TestCase
     user_id = 4
     session[:user_id] = user_id
     get :new
-    assert_redirected_to user_path(user_id)
+    assert_response :success
   end
 
   test "should login" do

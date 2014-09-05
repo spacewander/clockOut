@@ -16,4 +16,25 @@ class ApplicationController < ActionController::Base
     return redirect_to login_url unless session[:user_id]
   end
 
+  def push_navbar_info_to_session(user)
+    session[:name] = user.name
+    session[:num] = user.current_missions
+  end
+
+  def pop_session_info_to_navbar
+    if session[:user_id]
+      @navbar = Navbar.new(session[:user_id], session[:name], session[:num])
+      @navbar.name ||= ''
+      @navbar.num ||= 0
+    else
+      @navbar = nil
+    end
+  end
+
+  def clean_sessions
+    session[:user_id] = nil
+    session[:name] = nil
+    session[:num] = nil
+  end
+
 end

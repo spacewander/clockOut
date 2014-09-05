@@ -1,0 +1,50 @@
+<% @title = "欢迎使用clockOut" %>
+
+<% content_for(:navbar) do %>
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id = "navbar-collapse nav-one">
+        <div class="navbar-left navbar-btn-groups ">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              小组
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">我的小组</a></li>
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              活动
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">我发起的活动</a></li>
+            </ul>
+          </div>
+        </div>
+        <ul class="nav navbar-nav navbar-list row  nav-two">
+          <% if @navbar %>
+            <li class="col-xs-4 navbar-num">当前项目数： <%= @navbar.num %></li>
+            <li class="navbar-name col-xs-4" ><%= link_to @navbar.name, user_path(@navbar.id) %></li>
+            <li class="col-xs-4"><%= link_to '个人设置', edit_user_path(@navbar.id) %></li>
+          <% end %>
+        </ul>
+        <button type="button" class="btn btn-default navbar-btn  navbar-right nav-three">
+          <a data-method="delete" href="/logout" rel="nofollow" class="no-decoration">登出</a>
+        </button>
+      </div>
+    </div>
+  </nav>
+<% end %>
+
+<%= render template: "layouts/application" %>

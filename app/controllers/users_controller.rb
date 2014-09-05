@@ -1,10 +1,13 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :pop_session_info_to_navbar, only: [:show, :edit, :index]
 
   # 各种操作（除了创建用户以外）都需要用户登录
   before_filter :has_logined, except: [:new, :create]
   # 有些操作只允许对自己的页面进行
   before_filter :is_hoster, only: [:edit, :update, :destroy]
+
+  layout 'user'
 
   # GET /users
   # GET /users.json
@@ -55,9 +58,11 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to action: 'show', :id => @user.member_no}
+        # 注册后先登录再说
+        format.html { redirect_to login_url}
         format.json { render :show, status: :created, location: @user }
       else
+        #puts @user.errors.full_messages
         format.html { render :new }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
@@ -69,9 +74,11 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
+        push_navbar_info_to_session(@user)
         format.html { redirect_to action: 'show', :id => @user.to_param}
         format.json { render :show, status: :ok, location: @user }
       else
+        #puts @user.errors.full_messages
         format.html { render :edit }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
@@ -82,6 +89,7 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   def destroy
     @user.destroy
+    clean_sessions
     respond_to do |format|
       format.html { redirect_to users_url, notice: '用户已成功注销' }
       format.json { head :no_content }

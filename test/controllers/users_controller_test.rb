@@ -7,7 +7,7 @@ class UsersControllerTest < ActionController::TestCase
       :password => 'mima',
       :password_confirmation => 'mima',
       :email => '123456@qq.com',
-      :sex => 'male'
+      :sex => ''
     }
 
   @user = users(:one)
@@ -18,8 +18,7 @@ class UsersControllerTest < ActionController::TestCase
       post :create, :user => @input
     end
 
-    member_no = User.find_by_name(@input[:name]).member_no
-    assert_redirected_to action: 'show', :id => member_no
+    assert_redirected_to login_url
   end
 
   test "should update user" do
