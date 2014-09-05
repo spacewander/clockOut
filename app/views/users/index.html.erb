@@ -1,45 +1,43 @@
-<h1>Listing users</h1>
+<% content_for(:javascript) do %>
+  <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => true %>
+<% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Name</th>
-      <th>Sex</th>
-      <th>Year</th>
-      <th>Date</th>
-      <th>Password hash</th>
-      <th>Salt</th>
-      <th>Join date</th>
-      <th>Email</th>
-      <th>Last actived</th>
-      <th>Member no</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @users.each do |user| %>
+<div class="table-responsive">
+  <table id="user-index" class="table table-hover ">
+    <thead>
       <tr>
-        <td><%= user.id %></td>
-        <td><%= user.name %></td>
-        <td><%= user.sex %></td>
-        <td><%= user.year %></td>
-        <td><%= user.date %></td>
-        <td><%= user.password_hash %></td>
-        <td><%= user.salt %></td>
-        <td><%= user.join_date %></td>
-        <td><%= user.email %></td>
-        <td><%= user.last_actived %></td>
-        <td><%= user.member_no %></td>
-        <td><%= link_to 'Show', user %></td>
-        <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>用户</th>
+        <th class="current-missions">当前任务</th>
+        <th class="historic-missions">历史进度</th>
+        <th class="progress-container"></th>
+        <th class="join-date">加入日期</th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
-
-<%= link_to 'New User', new_user_path %>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+        <td class="no-decoration name">
+          <%= link_to user.name, user %>
+        </td>
+        <td class="current-missions">
+          <%= user.current_missions %>
+        </td>
+        <td class="historic-missions">
+          <span class="finished-missions"><%= user.finished_missions %></span>
+          /
+          <span class="created-missions"><%= user.created_missions %></span>
+        </td>
+        <td class="progress-container"></td>
+        <td class="join-date">
+          <%= chinese_date_format(user.join_date) %>
+        </td>
+        <td class="member-no">
+          第<%= user.member_no %>号成员
+        </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

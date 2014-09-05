@@ -4,3 +4,76 @@
 #new_user {
   padding-bottom: 20px;
 }
+
+th {
+  width: 200px;
+}
+
+#user-index {
+  & > thead {
+    height: 3em;
+    border-bottom: 1px solid #D1EEEE;
+  }
+  
+  th {
+    text-align: center;
+    font-size: 18px;
+    line-height: 2em;
+    height: 2em;
+  }
+  
+  td {
+    text-align: center;
+    font-size: 16px
+  }
+  
+}
+
+th.current-missions {
+  width: 110px;
+}
+
+th.historic-missions {
+  width: 120px;
+}
+
+td.name {
+  $name_color : black;
+  
+  text-align: center;
+  font-weight: bold;
+  color: $name_color;
+  
+  & > a:hover {
+    color: $name_color;
+    text-decoration: none;
+    background-color: inherit;
+  }
+  
+  & > a:visted {
+    color: $name_color;
+  }
+}
+
+td.current-missions {
+  color: #DF7133;
+}
+
+td.historic-missions {
+  letter-spacing: -0.2em;
+}
+
+span.finished-missions {
+  color: red;
+//  letter-spacing: normal;
+}
+
+span.created-missions {
+  color: green;
+  letter-spacing: normal;
+}
+
+.progress {
+  // 这个变量不能定制，所以就直接覆盖掉它
+  margin-bottom: 0 !important; 
+}

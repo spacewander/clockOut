@@ -20,7 +20,7 @@ $(function(){
   // 虽然只是根据刚打开时的窗口大小进行调整，不能随窗口变化而动态改变，不过已经够了
   if ($('#main').length && $('#panel').length) {
     var winSize = $(window).height() - 
-            $('#main').css('margin-top').replace('px', '') - 20; // 20px作为底部边距
+            $('#main').css('margin-top').replace('px', '') - 80; // 80px作为底部边距
     if ($('#panel').height() < winSize) {
       $('#panel').height(winSize);
     }

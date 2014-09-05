@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140817142241) do
+ActiveRecord::Schema.define(version: 20140904160704) do
 
   create_table "activities", force: true do |t|
     t.string   "name",                default: "",    null: false
@@ -91,18 +91,21 @@ ActiveRecord::Schema.define(version: 20140817142241) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "name",          default: "", null: false
+    t.string   "name",              default: "", null: false
     t.string   "sex"
     t.integer  "year"
     t.string   "date"
-    t.string   "password_hash",              null: false
+    t.string   "password_hash",                  null: false
     t.string   "salt"
     t.date     "join_date"
-    t.string   "email",                      null: false
+    t.string   "email",                          null: false
     t.date     "last_actived"
     t.integer  "member_no"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "created_missions",  default: 0
+    t.integer  "finished_missions", default: 0
+    t.integer  "current_missions",  default: 0
   end
 
 end
