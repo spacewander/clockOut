@@ -75,6 +75,7 @@ div {
 .no-decoration {
   text-decoration: none;
   &:hover {
+    color: #000;
     text-decoration: none;
     background-color: transparent;
   }

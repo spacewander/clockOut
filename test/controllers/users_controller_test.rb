@@ -22,7 +22,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test "should update user" do
-    session[:user_id] = @user.to_param
+    session[:user_id] = @user.to_param.to_i
     put :update, :id => @user.to_param, :user => @input
     assert_redirected_to action: 'show', :id => @user.to_param
   end
@@ -38,4 +38,9 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :forbidden
   end
   
+  test "should redirect to 404 if can not set user(means user not found)" do
+    get :show, :id => 'haha'
+    assert_response 404
+  end
+
 end

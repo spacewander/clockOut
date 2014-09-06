@@ -1,0 +1,23 @@
+<%= bootstrap_form_for(@user) do |f| %>
+  <div class="field">
+    <%= f.text_field :name, :size => 30, :label => '用户名' %>
+  </div>
+  <div class="field">
+    <%= f.form_group :sex, label: { text: "性别(选填)" } do %>
+      <%= f.radio_button :sex, "男", label: "男", inline: true %>
+      <%= f.radio_button :sex, "女", label: "女", inline: true  %>
+      <%= f.radio_button :sex, "其他", label: "其他", inline: true  %>
+      <%= f.radio_button :sex, "", label: "不告诉你", inline: true  %>
+    <% end %>
+  </div>
+  <div class="field">
+    <%= f.select :year, (1900..Date.today.year), :selected => 1994, :label => '出生年份(选填)' %>
+  </div>
+  <div class="field">
+    <%= f.text_field :date, :size => 5, :label => '出生日期(选填)', :placeholder => 'mm-dd' %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit '保存修改' %>
+  </div>
+<% end %>

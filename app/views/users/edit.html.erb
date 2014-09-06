@@ -1,6 +1,12 @@
-<h1>Editing user</h1>
+<% @title = 'clockOut - 个人设置' %>
 
-<%= render 'form' %>
+<% content_for(:javascript) do %>
+  <%= javascript_include_tag 'sessions', 'data-turbolinks-track' => true %>
+<% end %>
 
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>
+<h1>个人设置</h1>
+<%= render 'edit_form' %>
+
+<div class="user-back">
+  <%= link_to '回到主页', @user, :class => 'no-decoration' %>
+</div>

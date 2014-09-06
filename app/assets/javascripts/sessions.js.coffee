@@ -3,17 +3,27 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 FormHelper =
   init: ->
-    where = document.getElementsByTagName('body')[0].className.split(" ")
-    return unless where?
-    if "sessions-controller" in where
-      @triggerModal()
-      @bindUsernameChecker()
-      @bindPasswordChecker()
-    else if 'users-controller' in where
-      @bindUsernameRegisterChecker()
-      @bindPasswordRegisterChecker()
-      @bindEmailReigisterChecker()
-      @bindDateReigisterChecker()
+    [controller, action] = document.getElementsByTagName('body')[0].className
+      .split(" ")
+    return unless controller?
+    switch controller
+      when 'sessions-controller'
+        @triggerModal()
+        @bindUsernameChecker()
+        @bindPasswordChecker()
+      when 'users-controller'
+        switch action
+          when 'new-action'
+            @bindUsernameRegisterChecker()
+            @bindPasswordRegisterChecker()
+            @bindEmailReigisterChecker()
+            @bindDateReigisterChecker()
+          when 'edit-action', 'update-action'
+            @bindUsernameRegisterChecker()
+            @bindDateReigisterChecker()
+      else
+        # do nothing
+            
 
   # 每次'#notice'改动后触发该函数，用于登录表单
   hideErrorWhenNoticeGiven: ->
@@ -41,7 +51,7 @@ FormHelper =
   # 根据标签名来给同级的help-block添加信息。注意新的信息会覆盖掉旧信息
   editHelpBlock: (labelName, msg) ->
     return if labelName == ''
-    console.log $('label[for=' + labelName + '] ~ .help-block')
+    
     # 使用CSS3的同级选择器
     if $('label[for=' + labelName + '] ~ .help-block').length
       $('label[for=' + labelName + '] ~ .help-block').text(msg)
@@ -52,7 +62,7 @@ FormHelper =
         """)
 
   bindPasswordRegisterChecker: ->
-    $('#new_user').submit (event) ->
+    $('form').submit (event) ->
       password = $('input[name="user[password]"]').val().trim()
       if password == ''
         event.preventDefault()
@@ -67,21 +77,21 @@ FormHelper =
         FormHelper.editHelpBlock('user_password_confirmation', '确认密码不匹配')
 
   bindUsernameRegisterChecker: ->
-    $('#new_user').submit (event) ->
+    $('form').submit (event) ->
       name = $('#user_name').val().trim()
       if name == ''
         event.preventDefault()
         FormHelper.editHelpBlock('user_name', '不能为空！')
 
   bindDateReigisterChecker: ->
-    $('#new_user').submit (event) ->
+    $('form').submit (event) ->
       date = $('#user_date').val().trim()
       if date != '' and !date.match(/^\d\d-\d\d$/)
         event.preventDefault()
         FormHelper.editHelpBlock('user_date', '格式不对啊！')
 
   bindEmailReigisterChecker: ->
-    $('#new_user').submit (event) ->
+    $('form').submit (event) ->
       email = $('#user_email').val().trim()
       if email == ''
         event.preventDefault()

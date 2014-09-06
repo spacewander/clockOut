@@ -191,3 +191,15 @@ $navbar-default-bg : rgb(248, 247, 243);
 .nav-three {
   background-color: adjust-color($navbar-default-bg, $lightness: -30%) !important;
 }
+
+/* about editing user */
+.users-controller.edit-action, .users-controller.update-action {
+  h1 {
+    text-align: center;
+  }
+  
+  .user-back {
+    float: right;
+    font-size: 16px;
+  }
+}

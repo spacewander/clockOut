@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   private 
 
   def not_found
-    redirect_to :status => 404
+    return redirect_to :status => 404
   end
 
   # 非本站用户请速去登录

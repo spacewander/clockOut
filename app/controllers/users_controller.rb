@@ -99,7 +99,11 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      begin
+        @user = User.find(params[:id])
+      rescue ActiveRecord::RecordNotFound
+        return not_found()
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -110,7 +114,7 @@ class UsersController < ApplicationController
 
     # 只有是页面主人才能提交修改
     def is_hoster
-      if session[:user_id] != params[:id]
+      if session[:user_id] != params[:id].to_i
         respond_to do |format|
           format.json { render json: {:msg => "unauthentication"}, 
                         status: :forbidden}

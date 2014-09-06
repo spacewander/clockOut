@@ -8,12 +8,14 @@ User =
   generalProgressBar: (percents) ->
     unless 0 <= percents <= 100
       return ''
+    return User.progressbarDetail(percents)
 
+  progressbarDetail: (percents) ->
     return """
   <div class="progress">
-    <div class="progress-bar progress-bar-success"
-      role="progressbar" aria-valuenow="#{percents}" aria-valuemin="0"
-      aria-valuemax="100" style="width: #{percents}%">
+    <div class="progress-bar progress-bar-success" role="progressbar"
+      aria-valuenow="#{percents}" aria-valuemin="0" aria-valuemax="100"
+      style="width: #{percents}%">
       <span class="sr-only">#{percents}%</span>
     </div>
   </div>
