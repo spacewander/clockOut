@@ -1,0 +1,30 @@
+<%= bootstrap_form_for(@mission, :html => {:role => 'form'}) do |f| %>
+  <div class="field">
+    <%= f.text_field :name, :label => '任务名', :maxlength => 30 %>
+  </div>
+  <!-- 注意，当input类型为number时，maxLength属性无效，所以只能用js手动实现个 -->
+  <div class="field">
+    <%= f.number_field :days, :value => 30, in: 1..9999, :label => '限期天数' %>
+  </div>
+  <div class="field">
+    <%= f.number_field :missed_limit, :value => 10, in: 0..9999, :label => '允许不打卡天数' %>
+  </div>
+  <div class="field">
+    <%= f.number_field :drop_out_limit, :value => 5, in: 0..9999, :label => '允许连续不打卡天数'%>
+  </div>
+  <div class="field">
+    <%= f.text_area :content, :label => '描述', :maxlength => 140, :placeholder => '不能超过140字' %>
+  </div>
+  <div class="field">
+    <%= f.check_box :public, :label => '是否公开' %>
+  </div>
+  <div class="field">
+    <%= f.hidden_field :user_id %>
+  </div>
+  <div class="field">
+    <%= f.hidden_field :authentication %>
+  </div>
+  <div class="actions">
+    <%= f.submit '创建新任务!' %>
+  </div>
+<% end %>

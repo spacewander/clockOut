@@ -1,14 +1,22 @@
+require 'digest/sha2'
+
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  SITE_NAME = "ClockOut"
-
   private 
 
   def not_found
     return redirect_to :status => 404
+  end
+
+  def forbidden
+    respond_to do |format|
+      format.json { render json: {:msg => "unauthentication"}, 
+                    status: :forbidden}
+      format.html { redirect_to :status => :forbidden  }
+    end
   end
 
   # 非本站用户请速去登录

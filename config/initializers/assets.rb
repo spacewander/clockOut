@@ -9,4 +9,7 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w( 
   sessions.js
   users.js
+  others.js
+  missions.js
+  feelings.js
 )

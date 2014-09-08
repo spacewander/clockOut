@@ -86,6 +86,11 @@ class User < ActiveRecord::Base
     @is_visitor = is_visitor
   end
 
+  def is_visitor
+    @is_visitor ||= false
+    @is_visitor
+  end
+
   private
 
   def password_given

@@ -1,59 +1,17 @@
+<% @title = "你好， " + @user.name %>
+
+<% content_for(:javascript) do %>
+  <%= javascript_include_tag 'sessions', 'data-turbolinks-track' => true %>
+  <% if @user.is_visitor %>
+    <!-- js for vistor -->
+    <%= javascript_include_tag 'others', 'data-turbolinks-track' => true %>
+  <% else %>
+    <!-- js for hoster -->
+    <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => true %>
+  <% end %>
+<% end %>
+
 <p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Id:</strong>
-  <%= @user.id %>
-</p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @user.name %>
-</p>
-
-<p>
-  <strong>Sex:</strong>
-  <%= @user.sex %>
-</p>
-
-<p>
-  <strong>Year:</strong>
-  <%= @user.year %>
-</p>
-
-<p>
-  <strong>Date:</strong>
-  <%= @user.date %>
-</p>
-
-<p>
-  <strong>Password hash:</strong>
-  <%= @user.password_hash %>
-</p>
-
-<p>
-  <strong>Salt:</strong>
-  <%= @user.salt %>
-</p>
-
-<p>
-  <strong>Join date:</strong>
-  <%= @user.join_date %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<p>
-  <strong>Last actived:</strong>
-  <%= @user.last_actived %>
-</p>
-
-<p>
-  <strong>Member no:</strong>
-  <%= @user.member_no %>
-</p>
-
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+<% if !@user.is_visitor %>
+  <%= render 'missions/new_form' %>
+<% end %>

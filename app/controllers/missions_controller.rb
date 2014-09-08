@@ -1,38 +1,30 @@
 class MissionsController < ApplicationController
   before_action :set_mission, only: [:show, :edit, :update, :destroy]
 
-  # GET /missions
-  # GET /missions.json
-  def index
-    @missions = Mission.all
-  end
-
-  # GET /missions/1
-  # GET /missions/1.json
-  def show
-  end
-
-  # GET /missions/new
-  def new
-    @mission = Mission.new
-  end
-
-  # GET /missions/1/edit
-  def edit
-  end
+  # 需要添加对于提交人的信息的验证，只有用户本人才能修改个人的任务
+  before_filter :authenticate_for_user, only: [:create, :edit, :update, :destroy]
 
   # POST /missions
   # POST /missions.json
   def create
     @mission = Mission.new(mission_params)
 
+    # 初始化当前进展记录
+    @mission.finished_days = 0
+    @mission.missed_days = 0
+    @mission.drop_out_days = 0
+
     respond_to do |format|
       if @mission.save
-        format.html { redirect_to @mission, notice: 'Mission was successfully created.' }
+        format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
+                      notice: '任务已成功创建' }
         format.json { render :show, status: :created, location: @mission }
       else
-        format.html { render :new }
-        format.json { render json: @mission.errors, status: :unprocessable_entity }
+        p @mission.errors.full_messages
+        format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
+                      notice: '任务创建失败' }
+        format.json { render json: @mission.errors, status: 
+                      :unprocessable_entity }
       end
     end
   end
@@ -42,11 +34,14 @@ class MissionsController < ApplicationController
   def update
     respond_to do |format|
       if @mission.update(mission_params)
-        format.html { redirect_to @mission, notice: 'Mission was successfully updated.' }
+        format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
+                      notice: '任务已成功更新' }
         format.json { render :show, status: :ok, location: @mission }
       else
-        format.html { render :edit }
-        format.json { render json: @mission.errors, status: :unprocessable_entity }
+        format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
+                      notice: '任务更新失败' }
+        format.json { render json: @mission.errors, status: 
+                      :unprocessable_entity }
       end
     end
   end
@@ -56,7 +51,8 @@ class MissionsController < ApplicationController
   def destroy
     @mission.destroy
     respond_to do |format|
-      format.html { redirect_to missions_url, notice: 'Mission was successfully destroyed.' }
+      format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
+                    notice: '任务已成功删除' }
       format.json { head :no_content }
     end
   end
@@ -69,6 +65,19 @@ class MissionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def mission_params
-      params.require(:mission).permit(:name, :days, :finished_days, :missed_days, :drop_out_days, :percents, :drop_out_limit, :content, :finished, :aborted, :public, :user_id)
+      params.require(:mission).permit(:name, :days, :missed_limit, 
+                                      :drop_out_limit, :content, 
+                                      :aborted, :public, :user_id)
     end
+
+    def authenticate_for_user
+      user_id = params['mission'][:user_id]
+      authentication = params['mission'][:authentication]
+      if !user_id || user_id.to_i <= 0
+        return forbidden()
+      elsif !authentication || authentication == ''
+        return forbidden()
+      end
+    end
+
 end

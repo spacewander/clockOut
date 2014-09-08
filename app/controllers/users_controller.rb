@@ -27,7 +27,15 @@ class UsersController < ApplicationController
     return not_found() unless @user
     
     # 是访客而非页面的主人
-    @user.is_visitor = true if session[:user_id] != params[:id]
+    if session[:user_id] != params[:id].to_i
+      @user.is_visitor = true
+    else
+      @user.is_visitor = false
+      # 个人主页三大功能之一：创建新的任务
+      @mission = Mission.new
+      @mission.user_id = session[:user_id]
+      @mission.authentication = session[:user_id]
+    end
     
     render
   end

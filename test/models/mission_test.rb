@@ -24,21 +24,27 @@ class MissionTest < ActiveSupport::TestCase
     mission = new_mission()
     mission.name = ''
     assert_invalid(mission, 'name')
+    mission.name = 'test'
+    mission.days = nil
+    assert_invalid(mission, "days")
+    mission.days = 90
+    mission.missed_limit = nil
+    assert_invalid(mission, 'missed_limit')
   end
 
-  test "the number of days > 0 and < 9999" do
+  test "the number of days > 0 and < 10000" do
     mission = new_mission()
     mission.days = 0
     assert_invalid(mission, 'days')
-    mission.days = 9999
+    mission.days = 10000
     assert_invalid(mission, 'days')
   end
 
-  test "number of limit >= 0 and < 9999" do
+  test "number of limit >= 0 and < 10000" do
     mission = new_mission()
     mission.drop_out_limit = -1
     assert_invalid(mission, 'drop_out_limit')
-    mission.drop_out_limit = 9999
+    mission.drop_out_limit = 10000
     assert_invalid(mission, 'drop_out_limit')
     mission.drop_out_limit = 0
     assert_valid(mission)
@@ -65,4 +71,5 @@ class MissionTest < ActiveSupport::TestCase
     mission.missed_limit = 91
     assert_invalid(mission, 'missed_limit')
   end
+
 end
