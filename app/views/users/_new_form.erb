@@ -1,4 +1,4 @@
-<%= bootstrap_form_for(@user) do |f| %>
+<%= bootstrap_form_for(@user, :html => {:role => 'form'}) do |f| %>
   <div class="field">
     <%= f.email_field :email, :label => '邮箱' %>
   </div>

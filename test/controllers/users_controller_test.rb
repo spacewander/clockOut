@@ -13,6 +13,11 @@ class UsersControllerTest < ActionController::TestCase
   @user = users(:one)
   end 
 
+  test "should use layouts/user as layout" do
+    get :index
+    assert_template layout: ["layouts/user", "user"]
+  end
+
   test "should create user" do
     assert_difference('User.count') do
       post :create, :user => @input
@@ -41,6 +46,21 @@ class UsersControllerTest < ActionController::TestCase
   test "should redirect to 404 if can not set user(means user not found)" do
     get :show, :id => 'haha'
     assert_response 404
+  end
+
+  test "should set is_visitor attribution when visitor is not the hoster" do
+    session[:user_id] = 1
+    get :show, :id => 2
+    assert_equal assigns(:user).is_visitor, true
+  end
+
+  test "should not show mission#new form when vistor is not the hoster" do
+    session[:user_id] = 1
+    get :show, :id => 2
+    assert_template layout: "layouts/user"
+    session[:user_id] = 2
+    get :show, :id => 2
+    assert_template layout: "layouts/user", partial: 'missions/_new_form'
   end
 
 end

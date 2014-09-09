@@ -34,7 +34,7 @@ class UsersController < ApplicationController
       # 个人主页三大功能之一：创建新的任务
       @mission = Mission.new
       @mission.user_id = session[:user_id]
-      @mission.authentication = session[:user_id]
+      @mission.user_token= session[:user_id]
     end
     
     render

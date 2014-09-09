@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'digest/sha2'
 
 class MissionsControllerTest < ActionController::TestCase
   setup do 
@@ -9,7 +10,7 @@ class MissionsControllerTest < ActionController::TestCase
       :drop_out_limit => 5,
       :content => "test test and more test",
       :user_id => 10,
-      :authentication => 'todo'
+      :user_token => Mission.encrypt_user_token(10)
     }
 
   @mission = missions(:one)
@@ -24,9 +25,16 @@ class MissionsControllerTest < ActionController::TestCase
   end
 
   test "should use user_id and authentication to authenticate user" do
-    @input[:authentication] = ''
+    @input[:user_token] = ''
     post :create, :mission => @input
-    assert_response :forbidden
+    assert_redirected_to login_url
+    @input[:user_token] = 'test'
+    post :create, :mission => @input
+    assert_redirected_to login_url
+
+    @input[:user_id] = 0
+    post :create, :mission => @input
+    assert_redirected_to login_url
   end
 
 end

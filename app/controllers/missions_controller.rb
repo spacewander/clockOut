@@ -14,15 +14,17 @@ class MissionsController < ApplicationController
     @mission.missed_days = 0
     @mission.drop_out_days = 0
 
+    @mission.public ||= false
+
     respond_to do |format|
       if @mission.save
         format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
                       notice: '任务已成功创建' }
         format.json { render :show, status: :created, location: @mission }
       else
-        p @mission.errors.full_messages
+        #p @mission.errors.full_messages
         format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
-                      notice: '任务创建失败' }
+                      notice: '任务创建失败'}
         format.json { render json: @mission.errors, status: 
                       :unprocessable_entity }
       end
@@ -39,7 +41,7 @@ class MissionsController < ApplicationController
         format.json { render :show, status: :ok, location: @mission }
       else
         format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
-                      notice: '任务更新失败' }
+                      notice: '任务创建失败'}
         format.json { render json: @mission.errors, status: 
                       :unprocessable_entity }
       end
@@ -65,18 +67,20 @@ class MissionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def mission_params
-      params.require(:mission).permit(:name, :days, :missed_limit, 
-                                      :drop_out_limit, :content, 
-                                      :aborted, :public, :user_id)
+      params_for_mission = {}
+      [:name, :days, :missed_limit, :drop_out_limit, :content, :public, :user_id]
+      .each {|item| params_for_mission[item] = params["mission"][item]}
+
+      return params_for_mission
     end
 
     def authenticate_for_user
-      user_id = params['mission'][:user_id]
-      authentication = params['mission'][:authentication]
+      user_id = params['mission'][:user_id].to_i
+      user_token = params['mission'][:user_token]
       if !user_id || user_id.to_i <= 0
-        return forbidden()
-      elsif !authentication || authentication == ''
-        return forbidden()
+        forbidden()
+      elsif !user_token || !(Mission.user_token_correct?(user_id, user_token))
+        forbidden()
       end
     end
 

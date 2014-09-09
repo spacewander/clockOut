@@ -12,10 +12,10 @@ class ApplicationController < ActionController::Base
   end
 
   def forbidden
-    respond_to do |format|
+    return respond_to do |format|
       format.json { render json: {:msg => "unauthentication"}, 
                     status: :forbidden}
-      format.html { redirect_to :status => :forbidden  }
+      format.html { redirect_to login_url}
     end
   end
 

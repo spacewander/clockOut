@@ -1,6 +1,10 @@
 require 'digest/sha2'
 
 # 用户类
+# 主键：id
+# 必须：用户名，邮箱
+# 选填：性别，出生日期
+# 系统自动填充：用户序号，最近活跃时间
 class User < ActiveRecord::Base
   has_many :missions, :dependent => :destroy
   has_many :supervisions
@@ -18,7 +22,6 @@ class User < ActiveRecord::Base
   validate :password_given
   attr_reader :password
   attr_accessor :password_confirmation
-  @global_hash = 'clockOut'
 
   validates :email, format: { with: /\A\w+@\w+(?:\.[a-zA-Z]+)+\z/, 
     message: "邮箱地址不正确！"}, 
@@ -98,7 +101,7 @@ class User < ActiveRecord::Base
   end
 
   def self.encrypt_password(password, salt)
-    Digest::SHA2.hexdigest(password + @global_hash + salt)[0, 32]
+    Digest::SHA2.hexdigest(password + ClockOut::Application::GLOBAL_SALT + salt)[0, 32]
   end
 
   def generate_salt
