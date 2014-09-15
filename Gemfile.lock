@@ -1,3 +1,14 @@
+GIT
+  remote: git://github.com/codebrew/backbone-rails.git
+  revision: 9bf992cc5e9fcb14174c437102040cdd6a562581
+  branch: master
+  specs:
+    rails-backbone (1.1.2)
+      coffee-script
+      ejs
+      jquery-rails
+      railties
+
 GEM
   remote: http://ruby.taobao.org/
   specs:
@@ -42,6 +53,7 @@ GEM
     byebug (3.2.0)
       columnize (~> 0.8)
       debugger-linecache (~> 1.2)
+    cancancan (1.9.2)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -51,6 +63,7 @@ GEM
     coffee-script-source (1.7.1)
     columnize (0.8.9)
     debugger-linecache (1.2.0)
+    ejs (1.1.1)
     erubis (2.7.0)
     execjs (2.2.1)
     font-awesome-rails (4.1.0.0)
@@ -170,11 +183,13 @@ DEPENDENCIES
   bootstrap_form
   bootstrap_helper
   byebug (~> 3.2.0)
+  cancancan
   coffee-rails (~> 4.0.0)
   jbuilder (~> 2.0)
   jquery-rails
   mysql2
   rails (= 4.1.4)
+  rails-backbone!
   rails_admin
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)

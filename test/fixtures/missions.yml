@@ -1,28 +1,65 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
+  name: 看书
   days: 30
-  finished_days: 1
-  missed_days: 1
-  missed_limit: 1
-  drop_out_days: 1
-  drop_out_limit: 1
-  content: MyText
+  finished_days: 11
+  missed_days: 12
+  missed_limit: 30
+  drop_out_days: 4
+  drop_out_limit: 10
+  content: 看书去
   finished: false
   aborted: false
   public: false
   user_id: 1
+  supervised: true
+  last_clock_out: <%= 1.day.ago.to_s() %>
 
 two:
-  name: MyString
-  days: 1
-  finished_days: 1
-  missed_days: 1
+  name: 刷代码
+  days: 100
+  finished_days: 10
+  missed_days: 4
+  missed_limit: 20
   drop_out_days: 1
-  drop_out_limit: 1
-  content: MyText
+  drop_out_limit: 10
+  content: 就是刷代码
   finished: false
   aborted: false
-  public: false
+  public: true
   user_id: 1
+  supervised: true
+  last_clock_out: <%= 1.day.ago.to_s() %>
+
+three:
+  name: 早点睡
+  days: 30
+  finished_days: 10
+  missed_days: 5
+  missed_limit: 3
+  drop_out_days: 1
+  drop_out_limit: 2
+  content: 晚上0点半（喂，这个已经不算晚上了吧）去睡觉
+  finished: true
+  aborted: true
+  public: true
+  user_id: 1
+  supervised: false
+  last_clock_out: <%= 100.day.ago.to_s() %>
+
+four:
+  name: 干点啥
+  days: 20
+  finished_days: 15
+  missed_days: 0
+  missed_limit: 3
+  drop_out_days: 1
+  drop_out_limit: 2
+  content: 用来测试更新任务信息的方法是否能正常工作
+  finished: true
+  aborted: true
+  public: true
+  user_id: 1
+  supervised: false
+  last_clock_out: <%= 5.day.ago.to_s() %>

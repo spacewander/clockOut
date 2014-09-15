@@ -51,6 +51,11 @@ gem 'will_paginate-bootstrap'
 gem 'bootstrap_helper'
 gem 'bootstrap_form'
 
+# for backbone
+gem 'rails-backbone', github: 'codebrew/backbone-rails', branch: 'master'
+
 # for admin
 gem 'rails_admin'
 
+# for authorization
+gem 'cancancan'

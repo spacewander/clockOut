@@ -8,7 +8,8 @@ require 'digest/sha2'
 class User < ActiveRecord::Base
   has_many :missions, :dependent => :destroy
   has_many :supervisions
-  has_many :missions, through: :supervisions
+  # 如果指明某个联系，那么就会覆盖第一条has_many，所以暂时不这么干
+  #has_many :missions, through: :supervisions
   has_many :participantions
   has_and_belongs_to_many :groups
 

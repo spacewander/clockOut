@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140904160704) do
+ActiveRecord::Schema.define(version: 20140915021830) do
 
   create_table "activities", force: true do |t|
     t.string   "name",                default: "",    null: false
@@ -59,21 +59,22 @@ ActiveRecord::Schema.define(version: 20140904160704) do
   end
 
   create_table "missions", force: true do |t|
-    t.string   "name",           default: "",    null: false
-    t.integer  "days",           default: 30,    null: false
+    t.string   "name",           default: "",           null: false
+    t.integer  "days",           default: 30,           null: false
     t.integer  "finished_days"
     t.integer  "missed_days"
-    t.integer  "missed_limit",   default: 10,    null: false
+    t.integer  "missed_limit",   default: 10,           null: false
     t.integer  "drop_out_days"
-    t.integer  "drop_out_limit", default: 5,     null: false
+    t.integer  "drop_out_limit", default: 5,            null: false
     t.text     "content"
-    t.boolean  "finished",       default: false, null: false
-    t.boolean  "aborted",        default: false, null: false
-    t.boolean  "public",         default: false, null: false
+    t.boolean  "finished",       default: false,        null: false
+    t.boolean  "aborted",        default: false,        null: false
+    t.boolean  "public",         default: false,        null: false
     t.integer  "user_id"
-    t.boolean  "supervised",     default: false, null: false
+    t.boolean  "supervised",     default: false,        null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "last_clock_out", default: '2014-09-15'
   end
 
   create_table "participantions", force: true do |t|

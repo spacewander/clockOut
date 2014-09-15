@@ -63,4 +63,25 @@ class UsersControllerTest < ActionController::TestCase
     assert_template layout: "layouts/user", partial: 'missions/_new_form'
   end
 
+  test "should redirect to 404 if current user doesn't exist" do
+    session[:user_id] = nil
+    get :finished_missions # trigger curent_user private method
+    assert_response 404
+  end
+
+  test "should return correct json when get the finished_missions" do
+    session[:user_id] = 1
+    get :finished_missions, :format => 'json'
+    # 注意在jbuilder中把下划线式的命名转换成驼峰式了
+    assert_equal 1, json_reponse['userId']
+    # 过滤后的任务数
+    assert_equal 4, json_reponse['finishedMissions'].length
+  end
+
+  test "should return {} when user doesn't create any mission" do
+    session[:user_id] = 2
+    get :finished_missions, :format => 'json'
+    assert_equal true, json_reponse.empty?
+  end
+  
 end

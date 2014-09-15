@@ -7,6 +7,7 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  # helper for unittest
   def assert_invalid object, item
     assert object.invalid?
     assert object.errors[item.to_sym].any?
@@ -15,6 +16,11 @@ class ActiveSupport::TestCase
   def assert_valid object, item = ''
     object.valid?
     assert_equal(object.errors[item.to_sym], []) if item
+  end
+
+  # helper for functional test
+  def json_reponse
+    ActiveSupport::JSON.decode @response.body
   end
 
 end

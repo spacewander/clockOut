@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :current_user, only: [:current_missions, :finished_missions]
   before_action :pop_session_info_to_navbar, only: [:show, :edit, :index]
 
   # 各种操作（除了创建用户以外）都需要用户登录
@@ -104,7 +105,34 @@ class UsersController < ApplicationController
     end
   end
 
+  # 获取所有未完成的Missions，更新它们并返回当前的Missions
+  def current_missions
+    
+  end
+
+  # 获取所有Missions，更新它们并返回已完成的Missions
+  def finished_missions
+    @missions = @user.missions
+    # 如果用户尚未创建任何任务，返回一个空的json对象
+    return respond_to { |format| format.json { render json: {} }} if @missions.empty?
+
+    update_lost_missions(@missions)
+
+    respond_to do |format|
+      format.json { render }
+    end
+  end
+
   private
+
+    def current_user
+      begin
+        @user = User.find(session[:user_id])
+      rescue ActiveRecord::RecordNotFound
+        return not_found()
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       begin
@@ -130,6 +158,11 @@ class UsersController < ApplicationController
         end
         return
       end
+    end
+
+    # 更新Missions数组中的所有Mission，更新缺勤天数，连续缺勤天数和是否失败
+    def update_lost_missions(missions)
+      return if missions.nil?
     end
 
 end
