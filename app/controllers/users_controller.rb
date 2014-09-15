@@ -107,19 +107,26 @@ class UsersController < ApplicationController
 
   # 获取所有未完成的Missions，更新它们并返回当前的Missions
   def current_missions
-    
+    @missions = @user.missions
+    respond_to do |format|
+      format.json { render :finished_missions }
+    end
   end
 
   # 获取所有Missions，更新它们并返回已完成的Missions
   def finished_missions
     @missions = @user.missions
-    # 如果用户尚未创建任何任务，返回一个空的json对象
-    return respond_to { |format| format.json { render json: {} }} if @missions.empty?
 
     update_lost_missions(@missions)
+    @missions = @missions.to_a.reject! {|mission| !mission.finished }
 
-    respond_to do |format|
-      format.json { render }
+    if !@missions || @missions.empty?
+      # 如果用户尚未创建任何任务或没有已完成的任务，返回一个空的json对象
+      respond_to { |format| format.json { render json: {} }}
+    else
+      respond_to do |format|
+        format.json { render }
+      end
     end
   end
 
@@ -163,6 +170,41 @@ class UsersController < ApplicationController
     # 更新Missions数组中的所有Mission，更新缺勤天数，连续缺勤天数和是否失败
     def update_lost_missions(missions)
       return if missions.nil?
+      missions.each do |mission|
+        if !mission.finished
+          gap_days = (Date.yesterday - mission.last_clock_out.to_date).to_i
+
+          if gap_days > 0
+            if mission.drop_out_days == 0
+              mission.drop_out_days = gap_days
+            else
+              mission.drop_out_days += gap_days
+            end
+            check_drop_out_limit(mission)
+
+            mission.missed_days += gap_days
+            check_missed_limit(mission)
+          end
+        end
+      end
+
+      @user.save
+    end
+
+    def check_missed_limit(mission)
+      if mission.missed_days >= mission.missed_limit
+        mission.missed_days = mission.missed_limit
+        mission.finished = true
+        mission.aborted = true
+      end
+    end
+
+    def check_drop_out_limit(mission)
+      if mission.drop_out_days >= mission.drop_out_limit
+        mission.drop_out_days = mission.drop_out_limit
+        mission.finished = true
+        mission.aborted = true
+      end
     end
 
 end

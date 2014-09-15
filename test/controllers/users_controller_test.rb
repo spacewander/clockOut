@@ -75,7 +75,14 @@ class UsersControllerTest < ActionController::TestCase
     # 注意在jbuilder中把下划线式的命名转换成驼峰式了
     assert_equal 1, json_reponse['userId']
     # 过滤后的任务数
-    assert_equal 4, json_reponse['finishedMissions'].length
+    assert_equal 3, json_reponse['finishedMissions'].length
+
+    testcase = {"name"=>"干点啥", "days"=>20, "missedLimit"=>3, 
+                "dropOutLimit"=>2, "aborted"=>true, "finishedDays"=>15, 
+                "missedDays"=>3, "dropOutDays"=>2}
+    assert_equal true, json_reponse['finishedMissions'].include?(testcase)
+    assert_equal true, 
+      json_reponse['finishedMissions'][1]['missed_days'] == json_reponse['finishedMissions'][1]['missed_limit']
   end
 
   test "should return {} when user doesn't create any mission" do

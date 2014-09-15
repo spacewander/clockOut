@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :users do
     collection do
       get 'finished_missions'
+      get 'current_missions'
     end
   end
 

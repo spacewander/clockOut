@@ -41,7 +41,7 @@ three:
   drop_out_days: 1
   drop_out_limit: 2
   content: 晚上0点半（喂，这个已经不算晚上了吧）去睡觉
-  finished: true
+  finished: false
   aborted: true
   public: true
   user_id: 1
@@ -57,8 +57,24 @@ four:
   drop_out_days: 1
   drop_out_limit: 2
   content: 用来测试更新任务信息的方法是否能正常工作
+  finished: false
+  aborted: false
+  public: true
+  user_id: 1
+  supervised: false
+  last_clock_out: <%= 5.day.ago.to_s() %>
+
+five:
+  name: 唯一完成的任务
+  days: 20
+  finished_days: 20
+  missed_days: 0
+  missed_limit: 3
+  drop_out_days: 1
+  drop_out_limit: 2
+  content: ''
   finished: true
-  aborted: true
+  aborted: false
   public: true
   user_id: 1
   supervised: false

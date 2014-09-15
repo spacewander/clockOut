@@ -12,6 +12,9 @@ one:
   email: a@123.com
   last_actived: 2014-08-17
   member_no: 1
+  created_missions: 4
+  finished_missions: 1
+  current_missions: 3
 
 wrong:
   id: 2
