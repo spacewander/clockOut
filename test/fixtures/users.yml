@@ -36,3 +36,10 @@ session:
   password_hash: <%= User.encrypt_password('mima', SALT)%>
   salt: <%= SALT %>
   email: test@gmail.com
+
+four:
+  id: 4
+  name: testguys
+  password_hash: <%= User.encrypt_password('secret', SALT)%>
+  salt: <%= SALT %>
+  email: test@163.com

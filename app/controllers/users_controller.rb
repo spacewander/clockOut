@@ -107,15 +107,24 @@ class UsersController < ApplicationController
 
   # 获取所有未完成的Missions，更新它们并返回当前的Missions
   def current_missions
-    @missions = @user.missions
-    respond_to do |format|
-      format.json { render :finished_missions }
+    @missions = @user.missions.where(finished: false)
+
+    update_lost_missions(@missions)
+    @missions = @missions.to_a.reject! {|mission| mission.finished }
+
+    if !@missions || @missions.empty?
+      # 如果用户尚未创建任何任务或没有正在进行中的任务，返回一个空的json对象
+      respond_to { |format| format.json { render json: {} }}
+    else
+      respond_to do |format|
+        format.json { render }
+      end
     end
   end
 
   # 获取所有Missions，更新它们并返回已完成的Missions
   def finished_missions
-    @missions = @user.missions
+    @missions = @user.missions.all()
 
     update_lost_missions(@missions)
     @missions = @missions.to_a.reject! {|mission| !mission.finished }
@@ -128,6 +137,21 @@ class UsersController < ApplicationController
         format.json { render }
       end
     end
+  end
+
+  # 更新Missions数组中的所有Mission，更新缺勤天数，连续缺勤天数和是否失败
+  # missions统一为AssociationRelation类型的数组
+  def update_lost_missions(missions)
+    return if missions.nil?
+    if missions.length == 1
+      update_lost_mission(missions.first)
+    else
+      missions.each do |mission|
+        update_lost_mission(mission)
+      end
+    end
+
+    @user.save
   end
 
   private
@@ -167,28 +191,24 @@ class UsersController < ApplicationController
       end
     end
 
-    # 更新Missions数组中的所有Mission，更新缺勤天数，连续缺勤天数和是否失败
-    def update_lost_missions(missions)
-      return if missions.nil?
-      missions.each do |mission|
-        if !mission.finished
-          gap_days = (Date.yesterday - mission.last_clock_out.to_date).to_i
+    # update_lost_missions 对集合中的每个元素调用该方法来完成实际工作
+    # mission为Mission对象
+    def update_lost_mission(mission)
+      if !mission.finished
+        gap_days = (Date.yesterday - mission.last_clock_out.to_date).to_i
 
-          if gap_days > 0
-            if mission.drop_out_days == 0
-              mission.drop_out_days = gap_days
-            else
-              mission.drop_out_days += gap_days
-            end
-            check_drop_out_limit(mission)
-
-            mission.missed_days += gap_days
-            check_missed_limit(mission)
+        if gap_days > 0
+          if mission.drop_out_days == 0
+            mission.drop_out_days = gap_days
+          else
+            mission.drop_out_days += gap_days
           end
+          check_drop_out_limit(mission)
+
+          mission.missed_days += gap_days
+          check_missed_limit(mission)
         end
       end
-
-      @user.save
     end
 
     def check_missed_limit(mission)

@@ -79,3 +79,35 @@ five:
   user_id: 1
   supervised: false
   last_clock_out: <%= 5.day.ago.to_s() %>
+
+six:
+  name: 老三的唯一完成的任务
+  days: 20
+  finished_days: 20
+  missed_days: 0
+  missed_limit: 3
+  drop_out_days: 1
+  drop_out_limit: 2
+  content: 用来测试没有当前任务的用户
+  finished: true
+  aborted: false
+  public: true
+  user_id: 3
+  supervised: false
+  last_clock_out: <%= 5.day.ago.to_s() %>
+
+seven:
+  name: 老四的进行中的任务
+  days: 20
+  finished_days: 10
+  missed_days: 0
+  missed_limit: 3
+  drop_out_days: 0
+  drop_out_limit: 2
+  content: 用来测试没有完成任务，只有当前任务的用户
+  finished: false
+  aborted: false
+  public: true
+  user_id: 4
+  supervised: false
+  last_clock_out: <%= 1.day.ago.to_s() %>

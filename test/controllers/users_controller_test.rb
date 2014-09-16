@@ -77,9 +77,9 @@ class UsersControllerTest < ActionController::TestCase
     # 过滤后的任务数
     assert_equal 3, json_reponse['finishedMissions'].length
 
-    testcase = {"name"=>"干点啥", "days"=>20, "missedLimit"=>3, 
+    testcase = {"id"=>281110143, "name"=>"干点啥", "days"=>20, "missedLimit"=>3, 
                 "dropOutLimit"=>2, "aborted"=>true, "finishedDays"=>15, 
-                "missedDays"=>3, "dropOutDays"=>2}
+                "missedDays"=>3, "dropOutDays"=>2, "public"=>true}
     assert_equal true, json_reponse['finishedMissions'].include?(testcase)
     assert_equal true, 
       json_reponse['finishedMissions'][1]['missed_days'] == json_reponse['finishedMissions'][1]['missed_limit']
@@ -91,4 +91,30 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal true, json_reponse.empty?
   end
   
+  test "should return {} when user doesn't have any finished mission" do
+    session[:user_id] = 4
+    get :finished_missions, :format => 'json'
+    assert_equal true, json_reponse.empty?
+  end
+
+  test "should return correct json when get the current_missions" do
+    session[:user_id] = 1
+    get :current_missions, :format => 'json'
+    # 注意在jbuilder中把下划线式的命名转换成驼峰式了
+    assert_equal 1, json_reponse['userId']
+    # 过滤后的任务数
+    assert_equal 2, json_reponse['finishedMissions'].length
+
+    testcase = {"id"=>298486374, "name"=>"刷代码", "days"=>100, "missedLimit"=>20,
+                "dropOutLimit"=>10, "finishedDays"=>10, "missedDays"=>4, 
+                "dropOutDays"=>1, "content"=>"就是刷代码", "public"=>true, "supervised"=>true}
+    assert_equal true, json_reponse['finishedMissions'].include?(testcase)
+  end
+
+  test "should return {} when user doesn't have any current mission" do
+    session[:user_id] = 3
+    get :current_missions, :format => 'json'
+    assert_equal true, json_reponse.empty?
+  end
+
 end
