@@ -17,6 +17,10 @@ Rails.application.routes.draw do
       get 'finished_missions'
       get 'current_missions'
     end
+    member do
+      get 'finished_missions' => :public_finished_missions
+      get 'current_missions' => :public_current_missions
+    end
   end
 
   mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)

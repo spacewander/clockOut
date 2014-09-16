@@ -1,10 +1,13 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy,
+                                  :public_current_missions, :public_finished_missions]
   before_action :current_user, only: [:current_missions, :finished_missions]
   before_action :pop_session_info_to_navbar, only: [:show, :edit, :index]
 
-  # 各种操作（除了创建用户以外）都需要用户登录
-  before_filter :has_logined, except: [:new, :create]
+  # 各种操作（除了创建用户和返回JSON的前端回调以外）都需要用户登录
+  before_filter :has_logined, except: [:new, :create,
+                                       :current_missions, :finished_missions,
+                                       :public_current_missions, :public_finished_missions]
   # 有些操作只允许对自己的页面进行
   before_filter :is_hoster, only: [:edit, :update, :destroy]
 
@@ -108,35 +111,25 @@ class UsersController < ApplicationController
   # 获取所有未完成的Missions，更新它们并返回当前的Missions
   def current_missions
     @missions = @user.missions.where(finished: false)
-
-    update_lost_missions(@missions)
-    @missions = @missions.to_a.reject! {|mission| mission.finished }
-
-    if !@missions || @missions.empty?
-      # 如果用户尚未创建任何任务或没有正在进行中的任务，返回一个空的json对象
-      respond_to { |format| format.json { render json: {} }}
-    else
-      respond_to do |format|
-        format.json { render }
-      end
-    end
+    response_current_missions()
   end
 
   # 获取所有Missions，更新它们并返回已完成的Missions
   def finished_missions
     @missions = @user.missions.all()
+    response_finished_missions()
+  end
 
-    update_lost_missions(@missions)
-    @missions = @missions.to_a.reject! {|mission| !mission.finished }
+  # 等同于同名无public前缀方法，不过只返回public=true的任务。不需要验证
+  def public_current_missions
+    @missions = @user.missions.where(public: true, finished: false)
+    response_current_missions()
+  end
 
-    if !@missions || @missions.empty?
-      # 如果用户尚未创建任何任务或没有已完成的任务，返回一个空的json对象
-      respond_to { |format| format.json { render json: {} }}
-    else
-      respond_to do |format|
-        format.json { render }
-      end
-    end
+  # 等同于同名无public前缀方法，不过只返回public=true的任务。不需要验证
+  def public_finished_missions
+    @missions = @user.missions.where(public: true)
+    response_finished_missions()
   end
 
   # 更新Missions数组中的所有Mission，更新缺勤天数，连续缺勤天数和是否失败
@@ -224,6 +217,36 @@ class UsersController < ApplicationController
         mission.drop_out_days = mission.drop_out_limit
         mission.finished = true
         mission.aborted = true
+      end
+    end
+
+    # 包装所有*finished_missions方法的公有处理部分
+    def response_finished_missions
+      update_lost_missions(@missions)
+      @missions.to_a.reject! {|mission| !mission.finished }
+
+      if !@missions || @missions.empty?
+        # 如果用户尚未创建任何任务或没有已完成的任务，返回一个空的json对象
+        respond_to { |format| format.json { render json: {} }}
+      else
+        respond_to do |format|
+          format.json { render :finished_missions }
+        end
+      end
+    end
+
+    # 包装所有*current_missions方法的公有处理部分
+    def response_current_missions
+      update_lost_missions(@missions)
+      @missions.to_a.reject! {|mission| mission.finished }
+
+      if !@missions || @missions.empty?
+        # 如果用户尚未创建任何任务或没有正在进行中的任务，返回一个空的json对象
+        respond_to { |format| format.json { render json: {} }}
+      else
+        respond_to do |format|
+          format.json { render :current_missions}
+        end
       end
     end
 

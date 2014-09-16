@@ -11,6 +11,14 @@ class UsersControllerTest < ActionController::TestCase
     }
 
   @user = users(:one)
+
+  @finished_testcase = {"id"=>281110143, "name"=>"干点啥", "days"=>20, 
+                       "missedLimit"=>3, "dropOutLimit"=>2, "aborted"=>true, 
+                       "finishedDays"=>15, "missedDays"=>3, "dropOutDays"=>2, "public"=>true}
+  @current_testcase = {"id"=>298486374, "name"=>"刷代码", "days"=>100, 
+                       "missedLimit"=>20, "dropOutLimit"=>10, "finishedDays"=>10, 
+                       "missedDays"=>4, "dropOutDays"=>1, "content"=>"就是刷代码", 
+                       "public"=>true, "supervised"=>true}
   end 
 
   test "should use layouts/user as layout" do
@@ -77,10 +85,7 @@ class UsersControllerTest < ActionController::TestCase
     # 过滤后的任务数
     assert_equal 3, json_reponse['finishedMissions'].length
 
-    testcase = {"id"=>281110143, "name"=>"干点啥", "days"=>20, "missedLimit"=>3, 
-                "dropOutLimit"=>2, "aborted"=>true, "finishedDays"=>15, 
-                "missedDays"=>3, "dropOutDays"=>2, "public"=>true}
-    assert_equal true, json_reponse['finishedMissions'].include?(testcase)
+    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase)
     assert_equal true, 
       json_reponse['finishedMissions'][1]['missed_days'] == json_reponse['finishedMissions'][1]['missed_limit']
   end
@@ -103,18 +108,56 @@ class UsersControllerTest < ActionController::TestCase
     # 注意在jbuilder中把下划线式的命名转换成驼峰式了
     assert_equal 1, json_reponse['userId']
     # 过滤后的任务数
-    assert_equal 2, json_reponse['finishedMissions'].length
+    assert_equal 2, json_reponse['currentMissions'].length
 
-    testcase = {"id"=>298486374, "name"=>"刷代码", "days"=>100, "missedLimit"=>20,
-                "dropOutLimit"=>10, "finishedDays"=>10, "missedDays"=>4, 
-                "dropOutDays"=>1, "content"=>"就是刷代码", "public"=>true, "supervised"=>true}
-    assert_equal true, json_reponse['finishedMissions'].include?(testcase)
+    assert_equal true, json_reponse['currentMissions'].include?(@current_testcase)
   end
 
   test "should return {} when user doesn't have any current mission" do
     session[:user_id] = 3
     get :current_missions, :format => 'json'
     assert_equal true, json_reponse.empty?
+  end
+
+  test "public_* method should return {} when user doesn't have any public mission" do
+    get :public_finished_missions, :id => 3, :format => "json"
+    assert_equal true, json_reponse.empty?
+    get :public_current_missions, :id => 3, :format => "json"
+    assert_equal true, json_reponse.empty?
+  end
+
+  test "public_current_missions method should not return {} when user have 
+        any public and current mission" do
+    get :public_current_missions, :id => 4, :format => "json"
+    assert_equal false, json_reponse.empty?
+    assert_equal 1, json_reponse['currentMissions'].length
+  end
+
+  test "public_finished_missions method should not return {} when user have
+        any public and finished mission" do
+    get :public_finished_missions, :id => 5, :format => "json"
+    assert_equal false, json_reponse.empty?
+    assert_equal 1, json_reponse['finishedMissions'].length
+  end
+
+  test "should return correct json when get the pulbic_current_missions" do
+    get :public_current_missions, :format => 'json', :id => 1
+    # 注意在jbuilder中把下划线式的命名转换成驼峰式了
+    assert_equal 1, json_reponse['userId']
+    # 过滤后的任务数
+    assert_equal 1, json_reponse['currentMissions'].length
+
+    assert_equal true, json_reponse['currentMissions'].include?(@current_testcase)
+  end
+
+  test "should return correct json when get the public_finished_missions" do
+    get :public_finished_missions, :format => 'json', :id => 1
+    # 注意在jbuilder中把下划线式的命名转换成驼峰式了
+    assert_equal 1, json_reponse['userId']
+    # 过滤后的任务数
+    assert_equal 3, json_reponse['finishedMissions'].length
+
+    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase)
   end
 
 end

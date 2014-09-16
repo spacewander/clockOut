@@ -43,3 +43,10 @@ four:
   password_hash: <%= User.encrypt_password('secret', SALT)%>
   salt: <%= SALT %>
   email: test@163.com
+
+five:
+  id: 5
+  name: testgirl
+  password_hash: <%= User.encrypt_password('secret', SALT)%>
+  salt: <%= SALT %>
+  email: test@qq.com

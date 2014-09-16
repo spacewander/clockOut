@@ -6,7 +6,7 @@ json.key_format! camelize: :lower
 json.user_id @missions[0].user_id
 json.created_at Time.now
 
-json.finished_missions @missions do |mission|
+json.current_missions @missions do |mission|
   json.id mission.id
   json.name mission.name
   json.days mission.days

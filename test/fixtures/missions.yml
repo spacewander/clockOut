@@ -88,10 +88,10 @@ six:
   missed_limit: 3
   drop_out_days: 1
   drop_out_limit: 2
-  content: 用来测试没有当前任务的用户
+  content: 用来测试没有当前任务的用户和没有公开任务的用户
   finished: true
   aborted: false
-  public: true
+  public: false
   user_id: 3
   supervised: false
   last_clock_out: <%= 5.day.ago.to_s() %>
@@ -109,5 +109,21 @@ seven:
   aborted: false
   public: true
   user_id: 4
+  supervised: false
+  last_clock_out: <%= 1.day.ago.to_s() %>
+
+eight:
+  name: 老五的已完成的任务
+  days: 20
+  finished_days: 20
+  missed_days: 0
+  missed_limit: 3
+  drop_out_days: 0
+  drop_out_limit: 2
+  content: 用来测试有已完成的公开任务
+  finished: true
+  aborted: false
+  public: true
+  user_id: 5
   supervised: false
   last_clock_out: <%= 1.day.ago.to_s() %>
