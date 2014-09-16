@@ -94,6 +94,7 @@ class User < ActiveRecord::Base
     @is_visitor ||= false
     @is_visitor
   end
+  alias is_visitor? is_visitor
 
   private
 
