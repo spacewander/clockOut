@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy,
+  before_action :set_user_with_params, only: [:show, :edit, :update, :destroy,
                                   :public_current_missions, :public_finished_missions]
-  before_action :current_user, only: [:current_missions, :finished_missions]
+  before_action :set_user_with_session, only: [:current_missions, :finished_missions]
   before_action :pop_session_info_to_navbar, only: [:show, :edit, :index]
 
   # 各种操作（除了创建用户和返回JSON的前端回调以外）都需要用户登录
@@ -10,6 +10,8 @@ class UsersController < ApplicationController
                                        :public_current_missions, :public_finished_missions]
   # 有些操作只允许对自己的页面进行
   before_filter :is_hoster, only: [:edit, :update, :destroy]
+
+  authorize_resource :only => [:current_missions, :finished_missions]
 
   layout 'user'
 
@@ -149,18 +151,25 @@ class UsersController < ApplicationController
 
   private
 
+    # 跟cancancan配套使用，注意不需要重新构造用户对象。当前用户不存在则返回nil
     def current_user
+        @user ||= nil
+        @user.is_visitor = true if @user && @user.id != session[:user_id]
+        @user
+    end
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_user_with_params
       begin
-        @user = User.find(session[:user_id])
+        @user = User.find(params[:id])
       rescue ActiveRecord::RecordNotFound
         return not_found()
       end
     end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
+    def set_user_with_session
       begin
-        @user = User.find(params[:id])
+        @user = User.find(session[:user_id])
       rescue ActiveRecord::RecordNotFound
         return not_found()
       end

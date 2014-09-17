@@ -29,10 +29,12 @@ class Ability
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
     return if user.nil?
-    if user.admin?
-      can :manage, :all
-    elsif user.is_visitor?
-      can :read, :all
+    if user.is_visitor?
+      can :read, Mission, :public => true
+    else
+      can :manage, Mission, :user_id => user.id
+      can :current_missions, User
+      can :finished_missions, User
     end
   end
 end

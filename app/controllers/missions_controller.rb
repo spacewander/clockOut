@@ -65,6 +65,16 @@ class MissionsController < ApplicationController
       @mission = Mission.find(params[:id])
     end
 
+    def current_user
+      if @mission
+        @user = @mission.user
+        @user.is_visitor = true if !@user.nil? && @user.id != session[:user_id]
+        @user
+      else
+        nil
+      end
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def mission_params
       params_for_mission = {}

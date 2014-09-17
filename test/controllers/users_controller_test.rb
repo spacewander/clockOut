@@ -19,6 +19,7 @@ class UsersControllerTest < ActionController::TestCase
                        "missedLimit"=>20, "dropOutLimit"=>10, "finishedDays"=>10, 
                        "missedDays"=>4, "dropOutDays"=>1, "content"=>"就是刷代码", 
                        "public"=>true, "supervised"=>true}
+  
   end 
 
   test "should use layouts/user as layout" do
@@ -73,7 +74,12 @@ class UsersControllerTest < ActionController::TestCase
 
   test "should redirect to 404 if current user doesn't exist" do
     session[:user_id] = nil
-    get :finished_missions # trigger curent_user private method
+    get :finished_missions # trigger set_user_with_session private method
+    assert_response 404
+  end
+
+  test "finished_missions should authorize with current_user" do
+    get :finished_missions, :format => 'json' # get with current_user return nil
     assert_response 404
   end
 
@@ -100,6 +106,11 @@ class UsersControllerTest < ActionController::TestCase
     session[:user_id] = 4
     get :finished_missions, :format => 'json'
     assert_equal true, json_reponse.empty?
+  end
+
+  test "current_missions should authorize with current_user" do
+    get :current_missions, :format => 'json' # get with current_user return nil
+    assert_response 404
   end
 
   test "should return correct json when get the current_missions" do
@@ -158,6 +169,18 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal 3, json_reponse['finishedMissions'].length
 
     assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase)
+  end
+
+  test "authorize current_missions and finished_missions with cancancan" do
+    @user.is_visitor = true
+    ability = Ability.new(@user)
+    assert ability.cannot?(:current_missions, User)
+    assert ability.cannot?(:finished_missions, User)
+
+    @user.is_visitor = false
+    ability = Ability.new(@user)
+    assert ability.can?(:current_missions, User)
+    assert ability.can?(:finished_missions, User)
   end
 
 end
