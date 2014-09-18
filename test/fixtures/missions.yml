@@ -19,7 +19,7 @@ one:
 two:
   name: 刷代码
   days: 100
-  finished_days: 10
+  finished_days: 99
   missed_days: 4
   missed_limit: 20
   drop_out_days: 1

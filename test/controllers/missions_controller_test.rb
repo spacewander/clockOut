@@ -14,7 +14,13 @@ class MissionsControllerTest < ActionController::TestCase
     }
 
   @mission = missions(:one)
+  @finished_mission = missions(:five)
   end 
+
+  test "should filter wrong mission id required" do
+    get :show, :id => 0
+    assert_response 404
+  end
 
   test "should create mission" do
     assert_difference('Mission.count') do
@@ -35,6 +41,85 @@ class MissionsControllerTest < ActionController::TestCase
     @input[:user_id] = 0
     post :create, :mission => @input
     assert_redirected_to login_url
+  end
+
+  test "should set is_visitor attribute when user.id is not the same with which 
+        in session or there is not user_id in session" do
+    get :clock_out, :id => @mission, :format => 'json' # trigger current_user private method
+    assert_not_nil assigns(:user)
+    assert_equal true, assigns(:user).is_visitor
+  end
+
+  # 注意这里把一个方面的测试分作三个来做，是因为cancancan调用current_user会使用缓存，
+  # 导致一个测试内只会调用一次current_user
+  test "set is_visitor attribute should work well(test 2)" do
+    # @mission.id == 1
+    session[:user_id] = 2
+    get :clock_out, :id => @mission, :format => 'json'
+    assert_not_nil assigns(:user)
+    assert_equal true, assigns(:user).is_visitor
+  end
+
+  test "set is_visitor attribute should work well(test 3)" do
+    session[:user_id] = 1
+    get :clock_out, :id => @mission, :format => 'json'
+    assert_not_nil assigns(:user)
+    assert_equal false, assigns(:user).is_visitor
+  end
+
+  test "if current user is vistor, he should not touch clock_out and abort" do
+    get :clock_out, :id => @mission, :format => 'json'
+    assert_not_nil json_reponse['err']
+    
+    get :abort, :id => @mission, :format => 'json'
+    assert_not_nil json_reponse['err']
+  end
+
+  test "get clock_out should add finished_days and update mission" do
+    session[:user_id] = @mission.user_id
+    get :clock_out, :id => @mission, :format => 'json'
+
+    assert_equal 0, json_reponse['dropOutDays']
+    assert_equal 12, json_reponse['finishedDays']
+  end
+
+  test "get clock_out should update mission into finished state if need" do
+    session[:user_id] = missions(:two).user_id
+    get :clock_out, :id => missions(:two), :format => 'json'
+
+    assert_equal true, json_reponse['finished']
+  end
+
+  test "get abort should abort given mission" do
+    session[:user_id] = @mission.user_id
+    get :abort, :id => @mission, :format => 'json'
+
+    assert_equal true, json_reponse['aborted']
+    assert_equal true, json_reponse['finished']
+  end
+
+  test "abort, clock_out, and update only work at unfinished mission" do
+    session[:user_id] = @finished_mission.user_id
+    error_message = '不能修改已完成的任务！'
+    put :update, :id => @finished_mission, :format => 'json'
+    assert_equal error_message, json_reponse['err']
+    get :abort, :id => @finished_mission, :format => 'json'
+    assert_equal error_message, json_reponse['err']
+    get :clock_out, :id => @finished_mission, :format => 'json'
+    assert_equal error_message, json_reponse['err']
+  end
+
+  test "authorize clock_out and abort with cancancan" do
+    @user = users(:one)
+    @user.is_visitor = true
+    ability = Ability.new(@user)
+    assert ability.cannot?(:clock_out, Mission)
+    assert ability.cannot?(:abort, Mission)
+
+    @user.is_visitor = false
+    ability = Ability.new(@user)
+    assert ability.can?(:clock_out, Mission)
+    assert ability.can?(:abort, Mission)
   end
 
 end

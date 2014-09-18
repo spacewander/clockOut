@@ -1,1 +1,1 @@
-json.err = @error_message
+json.err @error_message

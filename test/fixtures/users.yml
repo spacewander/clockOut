@@ -3,7 +3,7 @@
 one:
   id: 1
   name: MyString
-  sex: MyString
+  sex: 男
   year: 1999
   date: 09-21
   password_hash: MyString
@@ -19,7 +19,7 @@ one:
 wrong:
   id: 2
   name: wrong
-  sex: male
+  sex: 男
   year: 2000
   date: 02-28
   password_hash: haha

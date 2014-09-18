@@ -10,6 +10,12 @@ Rails.application.routes.draw do
   resources :groups
 
   resources :missions
+  resources :missions do
+    member do
+      get 'clockout' => :clock_out
+      get 'abort' => :abort
+    end
+  end
 
   resources :users
   resources :users do

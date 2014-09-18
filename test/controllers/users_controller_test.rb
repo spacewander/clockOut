@@ -16,7 +16,7 @@ class UsersControllerTest < ActionController::TestCase
                        "missedLimit"=>3, "dropOutLimit"=>2, "aborted"=>true, 
                        "finishedDays"=>15, "missedDays"=>3, "dropOutDays"=>2, "public"=>true}
   @current_testcase = {"id"=>298486374, "name"=>"刷代码", "days"=>100, 
-                       "missedLimit"=>20, "dropOutLimit"=>10, "finishedDays"=>10, 
+                       "missedLimit"=>20, "dropOutLimit"=>10, "finishedDays"=>99, 
                        "missedDays"=>4, "dropOutDays"=>1, "content"=>"就是刷代码", 
                        "public"=>true, "supervised"=>true}
   
@@ -57,7 +57,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response 404
   end
 
-  test "should set is_visitor attribution when visitor is not the hoster" do
+  test "should set is_visitor attribute when visitor is not the hoster" do
     session[:user_id] = 1
     get :show, :id => 2
     assert_equal assigns(:user).is_visitor, true
