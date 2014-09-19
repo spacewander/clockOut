@@ -18,8 +18,7 @@ class UsersControllerTest < ActionController::TestCase
   @current_testcase = {"id"=>298486374, "name"=>"刷代码", "days"=>100, 
                        "missedLimit"=>20, "dropOutLimit"=>10, "finishedDays"=>99, 
                        "missedDays"=>4, "dropOutDays"=>1, "content"=>"就是刷代码", 
-                       "public"=>true, "supervised"=>true}
-  
+                       "aborted"=>false, "finished"=>false, "public"=>true, "supervised"=>true}
   end 
 
   test "should use layouts/user as layout" do
@@ -91,7 +90,8 @@ class UsersControllerTest < ActionController::TestCase
     # 过滤后的任务数
     assert_equal 3, json_reponse['finishedMissions'].length
 
-    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase)
+    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase),
+      json_reponse['finishedMissions']
     assert_equal true, 
       json_reponse['finishedMissions'][1]['missed_days'] == json_reponse['finishedMissions'][1]['missed_limit']
   end
@@ -121,7 +121,8 @@ class UsersControllerTest < ActionController::TestCase
     # 过滤后的任务数
     assert_equal 2, json_reponse['currentMissions'].length
 
-    assert_equal true, json_reponse['currentMissions'].include?(@current_testcase)
+    assert_equal true, json_reponse['currentMissions'].include?(@current_testcase),
+      json_reponse['currentMissions']
   end
 
   test "should return {} when user doesn't have any current mission" do
@@ -158,7 +159,8 @@ class UsersControllerTest < ActionController::TestCase
     # 过滤后的任务数
     assert_equal 1, json_reponse['currentMissions'].length
 
-    assert_equal true, json_reponse['currentMissions'].include?(@current_testcase)
+    assert_equal true, json_reponse['currentMissions'].include?(@current_testcase),
+      json_reponse['currentMissions']
   end
 
   test "should return correct json when get the public_finished_missions" do
@@ -168,7 +170,8 @@ class UsersControllerTest < ActionController::TestCase
     # 过滤后的任务数
     assert_equal 3, json_reponse['finishedMissions'].length
 
-    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase)
+    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase),
+      json_reponse['finishedMissions']
   end
 
   test "authorize current_missions and finished_missions with cancancan" do

@@ -19,6 +19,8 @@ module.exports = function(config) {
       'spec/javascripts/support/jasmine-jquery.js',
       'spec/javascripts/support/bootstrap.min.css',
       'spec/javascripts/support/bootstrap.min.js',
+      'spec/javascripts/support/underscore-min.js',
+      'spec/javascripts/support/backbone-min.js',
       'app/assets/javascripts/**/*.js',
       'app/assets/javascripts/**/*.js.coffee',
       'spec/javascripts/*.coffee'

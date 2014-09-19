@@ -18,6 +18,8 @@ json.current_missions @missions do |mission|
   json.drop_out_days mission.drop_out_days
   json.content mission.content
 
+  json.aborted mission.aborted
+  json.finished mission.finished
   json.public mission.public
   json.supervised mission.supervised
 end

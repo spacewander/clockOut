@@ -23,4 +23,10 @@ class ActiveSupport::TestCase
     ActiveSupport::JSON.decode @response.body
   end
 
+  # puts the message in assert_* method, for example:
+  # assert_equal true, assigns(:user).is_visitor, puts_it("XX is not a visitor")
+  def puts_it(msg)
+    puts msg
+  end
+
 end
