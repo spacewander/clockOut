@@ -15,6 +15,26 @@
   <p id="error"><%= notice %></p>
 </div>
 
+<div class="table-responsive">
+  <table id="current-missions-table" class="table table-hover ">
+    <thead>
+      <tr>
+        <th>任务</th>
+        <th class="th-finished-days">打卡天数</th>
+        <th class="th-days">所需打卡天数</th>
+        <th class="th-missed">缺勤</th>
+        <th class="th-drop-out">连续缺勤</th>
+        <th class="th-mission-progress-container"></th>
+        <th colspan="4"></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody id="current-missions">
+    </tbody>
+  </table>
+</div>
+
 <% if !@user.is_visitor %>
   <%= render 'missions/new_form' %>
 <% else %>

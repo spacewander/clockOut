@@ -12,4 +12,5 @@ Rails.application.config.assets.precompile += %w(
   others.js
   missions.js
   feelings.js
+  backbone/*.js
 )

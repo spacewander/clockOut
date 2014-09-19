@@ -1,5 +1,5 @@
-class ClockOut.Routers.FeelingsRouter extends Backbone.Router
+class FeelingsRouter extends Backbone.Router
   initialize: (options) ->
 
-  routes:
-  
+  #routes:
+

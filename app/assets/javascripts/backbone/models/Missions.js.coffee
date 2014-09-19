@@ -1,3 +1,4 @@
+# Model
 class Mission extends Backbone.Model
   urlRoot: '/missions'
 
@@ -11,21 +12,18 @@ class Mission extends Backbone.Model
     dropOutLimit: 5
     missedDays: 0
     missedLimit: 10
-
-class MissionsCollection extends Backbone.Collection
-  model: Mission
-  url: '/missions'
-
-class CurrentMission extends Mission
-  defaults:
     public: false
     supervised: false
     aborted: false
     finished: false
 
-class FinishedMission extends Mission
-  defaults:
-    public: false
-    supervised: false
-    aborted: false
-    finished: true
+# Collection
+class CurrentMissionsCollection extends Backbone.Collection
+  model: Mission
+  url: '/missions'
+
+  initialize: (view) ->
+    @view = view
+    @on 'add', (mission) ->
+      @view.addCurrentMission(mission)
+
