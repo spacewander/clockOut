@@ -1,4 +1,4 @@
-class FeelingsRouter extends Backbone.Router
+class window.FeelingsRouter extends Backbone.Router
   initialize: (options) ->
 
   #routes:

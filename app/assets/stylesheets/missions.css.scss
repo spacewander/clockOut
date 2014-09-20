@@ -14,3 +14,9 @@
     line-height: 1.25em;
   }
 }
+
+#current-missions, #finished-missions {
+  td.btn {
+    display: inline;
+  }
+}

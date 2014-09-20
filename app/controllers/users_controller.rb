@@ -28,10 +28,6 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @user = User.find(params[:id])
-    # 找不到该用户
-    return not_found() unless @user
-    
     # 是访客而非页面的主人
     if session[:user_id] != params[:id].to_i
       @user.is_visitor = true
@@ -112,6 +108,7 @@ class UsersController < ApplicationController
 
   # 获取所有未完成的Missions，更新它们并返回当前的Missions
   def current_missions
+    p 'b'
     @missions = @user.missions.where(finished: false)
     response_current_missions()
   end

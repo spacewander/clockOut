@@ -1,5 +1,7 @@
 **/Session.vim
 **/*.sw*
+**/.gitkeep
+
 *.rbc
 capybara-*.html
 .rspec

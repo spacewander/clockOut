@@ -30,6 +30,18 @@ class MissionsControllerTest < ActionController::TestCase
     assert_redirected_to user_path(@input[:user_id])
   end
 
+  test "should init some required attributes when create mission, 
+    for instance, last_clock_out, finished_days, missed_days, drop_out_days" do
+    post :create, :mission => @input
+
+    assert_equal Date.today, assigns(:mission).last_clock_out
+    assert_in_delta assigns(:mission).last_clock_out.to_date, 
+      assigns(:mission).created_at.to_date, 1
+    assert_equal 0, assigns(:mission).finished_days
+    assert_equal 0, assigns(:mission).missed_days
+    assert_equal 0, assigns(:mission).drop_out_days
+  end
+
   test "should use user_id and authentication to authenticate user" do
     @input[:user_token] = ''
     post :create, :mission => @input

@@ -1,5 +1,5 @@
 # Model
-class Mission extends Backbone.Model
+class window.Mission extends Backbone.Model
   urlRoot: '/missions'
 
   defaults:
@@ -21,7 +21,7 @@ class Mission extends Backbone.Model
     percents: 0
 
 # Collection
-class MissionsCollection extends Backbone.Collection
+class window.MissionsCollection extends Backbone.Collection
   model: Mission
   url: '/missions'
 
@@ -45,7 +45,7 @@ class MissionsCollection extends Backbone.Collection
         mission.set('percents', 0)
 
 
-class CurrentMissionsCollection extends MissionsCollection
+class window.CurrentMissionsCollection extends MissionsCollection
   initialize: (view) ->
     super.initialize(view)
     @on 'add', (mission) ->
@@ -53,7 +53,7 @@ class CurrentMissionsCollection extends MissionsCollection
       @view.addCurrentMission(mission)
 
 
-class FinishedMissionCollection extends MissionsCollection
+class window.FinishedMissionCollection extends MissionsCollection
   initialize: (view) ->
     super.initialize(view)
     @on 'add', (mission) ->

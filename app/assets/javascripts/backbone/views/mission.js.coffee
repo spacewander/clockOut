@@ -1,4 +1,4 @@
-class CurrentMissionView extends Backbone.View
+class window.CurrentMissionView extends Backbone.View
   template: JST.currentMission
   el: '#current-missions'
 
@@ -49,7 +49,7 @@ class CurrentMissionView extends Backbone.View
       # do nothing
 
 
-class FinishedMissionView extends Backbone.View
+class window.FinishedMissionView extends Backbone.View
   template: JST.finishedMission
   el: '#finished-missions'
 

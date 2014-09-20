@@ -21,6 +21,7 @@ class MissionsController < ApplicationController
     @mission.finished_days = 0
     @mission.missed_days = 0
     @mission.drop_out_days = 0
+    @mission.last_clock_out = Date.today
 
     @mission.public ||= false
 

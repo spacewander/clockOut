@@ -1,4 +1,4 @@
-class MissionsRouter extends Backbone.Router
+class window.MissionsRouter extends Backbone.Router
   initialize: (options) ->
 
   #routes:

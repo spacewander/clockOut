@@ -9,8 +9,10 @@
     <!-- js for hoster -->
     <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => true %>
   <% end %>
+  <%= javascript_include_tag 'missions', 'data-turbolinks-track' => true %>
 <% end %>
 
+<div id="user-id" data-user_id="<% @user.id %>"></div>
 <!-- 第一部分 全局的提示栏 -->
 <div class="mission-notice">
   <p id="error"><%= notice %></p>
@@ -44,8 +46,8 @@
 <!-- 第三部分 创建新任务的表单 只对非访客显示 一开始不出现，按下新增任务按钮后触发 -->
 <div id="new-mission-panel">
   <div id="missions-new" >
-    <button class="btn new-mission-btn">新增</button>
-    <div class="none">
+    <button class="btn" id="new-mission-btn">新增</button>
+    <div class="none" id="new-mission-form">
     <% if !@user.is_visitor %>
       <%= render 'missions/new_form' %>
     <% else %>
@@ -58,8 +60,8 @@
 <!-- 第四部分 已完成任务表 一开始只显示向上的箭头，点击后显示。用分页插件进行分页显示 
   同样，对访客只显示公开的任务
 -->
-<div id="finished-missions-panel">
-  <div class="table-responsive none">
+<div id="finished-missions-panel none">
+  <div class="table-responsive">
     <table id="finished-missions-table" class="table table-hover ">
       <thead>
         <tr>

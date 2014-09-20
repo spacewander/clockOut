@@ -13,11 +13,22 @@
 //= require jquery
 //= require bootstrap-sprockets
 //= require jquery_ujs
+//= require underscore
+//= require backbone
+//= require backbone_rails_sync
+//= require backbone_datalink
+//= require backbone/clock_out
 //= require turbolinks
 
 $(function(){
   // 尽量使面板占据视图的大部分空间
   // 虽然只是根据刚打开时的窗口大小进行调整，不能随窗口变化而动态改变，不过已经够了
+  // 跳过users#show和missions#show
+  page = document.getElementsByTagName('body')[0].className;
+  if (page === 'users-controller show-action' || 
+    page === 'missions-controller show-action') {
+    return;
+  }
   if ($('#main').length && $('#panel').length) {
     var winSize = $(window).height() - 
             $('#main').css('margin-top').replace('px', '') - 80; // 80px作为底部边距
@@ -27,8 +38,3 @@ $(function(){
   }
 });
 
-//= require underscore
-//= require backbone
-//= require backbone_rails_sync
-//= require backbone_datalink
-//= require backbone/clock_out

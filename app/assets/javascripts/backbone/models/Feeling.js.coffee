@@ -1,4 +1,4 @@
-class Feeling extends Backbone.Model
+class window.Feeling extends Backbone.Model
   urlRoot: '/feelings'
 
   defaults:
@@ -7,6 +7,6 @@ class Feeling extends Backbone.Model
     content: ''
     dayName: '第一天'
 
-class FeelingsCollection extends Backbone.Collection
+class window.FeelingsCollection extends Backbone.Collection
   model: Feeling
   url: '/feelings'

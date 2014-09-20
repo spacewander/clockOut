@@ -17,7 +17,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users
   resources :users do
     collection do
       get 'finished_missions'
@@ -28,6 +27,7 @@ Rails.application.routes.draw do
       get 'current_missions' => :public_current_missions
     end
   end
+  resources :users
 
   mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   # The priority is based upon order of creation: first created -> highest priority.
