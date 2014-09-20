@@ -3,7 +3,9 @@ class Mission extends Backbone.Model
   urlRoot: '/missions'
 
   defaults:
-    id: 1
+    # Warning: if the id is the same with any other Mission,
+    # it will not trigger add event
+    id: 0
     name: ''
     content: ''
     finishedDays: 0
@@ -16,6 +18,7 @@ class Mission extends Backbone.Model
     supervised: false
     aborted: false
     finished: false
+    percents: 0
 
 # Collection
 class CurrentMissionsCollection extends Backbone.Collection
@@ -25,5 +28,22 @@ class CurrentMissionsCollection extends Backbone.Collection
   initialize: (view) ->
     @view = view
     @on 'add', (mission) ->
+      @calculatePercents(mission)
       @view.addCurrentMission(mission)
+
+  # 计算完成率，用于进度条的显示
+  calculatePercents: (mission) ->
+    days = mission.get('days')
+    finishedDays = mission.get('finishedDays')
+
+    if days == 0
+      mission.set('percents', 0)
+    else
+      try
+        if finishedDays <= days
+          mission.set('percents', finishedDays * 100 / days)
+        else
+          throw new Error('打卡天数不能超过所需打卡天数')
+      catch e
+        mission.set('percents', 0)
 

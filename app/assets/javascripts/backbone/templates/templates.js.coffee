@@ -1,7 +1,7 @@
 window.JST = {}
 window.JST.currentMission = _.template """
-  <tr class="current-mission">
-    <td class="no-decoration missio-name">
+  <tr class="current-mission" data-id="<%= id %>">
+    <td class="no-decoration mission-name">
       <%= name %>
       <a href="missions/<%= id %>" alt="<%= content %>"></a>
     </td>
@@ -21,7 +21,16 @@ window.JST.currentMission = _.template """
         /
       <span class="drop-out-limit second-item"><%= dropOutLimit %></span>
     </td>
-    <td class="mission-progress-container"></td>
+    <td class="mission-progress-container">
+      <div class="progress">
+        <div class="progress-bar progress-bar-success finished-percents"
+          role="progressbar"
+          aria-valuenow="<%= percents %>" aria-valuemin="0" aria-valuemax="100"
+          style="width: <%= percents %>%">
+          <span class="sr-only"><%= percents %>%</span>
+        </div>
+      </div>
+    </td>
     <td class="btn clock-out">
       打卡
     </td>
