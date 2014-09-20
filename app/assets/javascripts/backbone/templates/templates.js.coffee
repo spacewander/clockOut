@@ -1,6 +1,5 @@
 window.JST = {}
-window.JST.currentMission = _.template """
-  <tr class="current-mission" data-id="<%= id %>">
+missionTemplate = """
     <td class="no-decoration mission-name">
       <%= name %>
       <a href="missions/<%= id %>" alt="<%= content %>"></a>
@@ -31,11 +30,16 @@ window.JST.currentMission = _.template """
         </div>
       </div>
     </td>
+"""
+
+window.JST.currentMission = _.template """
+  <tr class="current-mission" data-id="<%= id %>">
+    #{missionTemplate}
     <td class="btn clock-out">
       打卡
     </td>
     <% if (public) { %>
-    <td class="btn private">
+    <td class="btn private none">
       私有
     <% } else { %>
     <td class="btn public">
@@ -52,7 +56,15 @@ window.JST.currentMission = _.template """
   """
 
 window.JST.finishedMission = _.template """
-
+  <tr class="finished-mission" data-id="<%= id %>">
+  #{missionTemplate}
+  <td colspan="4" class="mission-result">
+  <% if (aborted) { %>
+    失败
+  <% } else { %>
+    成功
+  <% } %>
+  </td>
   """
 
 window.JST.feeling = _.template """

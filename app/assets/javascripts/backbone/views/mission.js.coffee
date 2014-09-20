@@ -49,3 +49,15 @@ class CurrentMissionView extends Backbone.View
       # do nothing
 
 
+class FinishedMissionView extends Backbone.View
+  template: JST.finishedMission
+  el: '#finished-missions'
+
+  addFinishedMission: (finishedMission) ->
+    @$el.append(@template(finishedMission.attributes))
+    @$el
+
+  removeCurrentMission: (finishedMission) ->
+    $(".finished-mission[data-id=#{finishedMission.id}]").remove()
+    @$el
+

@@ -21,15 +21,12 @@ class Mission extends Backbone.Model
     percents: 0
 
 # Collection
-class CurrentMissionsCollection extends Backbone.Collection
+class MissionsCollection extends Backbone.Collection
   model: Mission
   url: '/missions'
 
   initialize: (view) ->
     @view = view
-    @on 'add', (mission) ->
-      @calculatePercents(mission)
-      @view.addCurrentMission(mission)
 
   # 计算完成率，用于进度条的显示
   calculatePercents: (mission) ->
@@ -46,4 +43,20 @@ class CurrentMissionsCollection extends Backbone.Collection
           throw new Error('打卡天数不能超过所需打卡天数')
       catch e
         mission.set('percents', 0)
+
+
+class CurrentMissionsCollection extends MissionsCollection
+  initialize: (view) ->
+    super.initialize(view)
+    @on 'add', (mission) ->
+      @calculatePercents(mission)
+      @view.addCurrentMission(mission)
+
+
+class FinishedMissionCollection extends MissionsCollection
+  initialize: (view) ->
+    super.initialize(view)
+    @on 'add', (mission) ->
+      @calculatePercents(mission)
+      @view.addFinishedMission(mission)
 

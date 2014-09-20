@@ -11,32 +11,71 @@
   <% end %>
 <% end %>
 
+<!-- 第一部分 全局的提示栏 -->
 <div class="mission-notice">
   <p id="error"><%= notice %></p>
 </div>
 
-<div class="table-responsive">
-  <table id="current-missions-table" class="table table-hover ">
-    <thead>
-      <tr>
-        <th>任务</th>
-        <th class="th-finished-days">打卡天数</th>
-        <th class="th-days">所需打卡天数</th>
-        <th class="th-missed">缺勤</th>
-        <th class="th-drop-out">连续缺勤</th>
-        <th class="th-mission-progress-container"></th>
-        <th colspan="4"></th>
-        <th></th>
-      </tr>
-    </thead>
+<!-- 第二部分 当前任务表 如果是访客， 只显示所有公开的任务 用具体加载的js文件来控制获取数据的方式 
+  不分页，所有的当前任务显示在同一页中
+-->
+<div id="current-missions-panel">
+  <div class="table-responsive">
+    <table id="current-missions-table" class="table table-hover ">
+      <thead>
+        <tr>
+          <th>任务</th>
+          <th class="th-finished-days">打卡天数</th>
+          <th class="th-days">所需打卡天数</th>
+          <th class="th-missed">缺勤</th>
+          <th class="th-drop-out">连续缺勤</th>
+          <th class="th-mission-progress-container"></th>
+          <th colspan="4"></th>
+          <th></th>
+        </tr>
+      </thead>
 
-    <tbody id="current-missions">
-    </tbody>
-  </table>
+      <tbody id="current-missions">
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<% if !@user.is_visitor %>
-  <%= render 'missions/new_form' %>
-<% else %>
-  <div id="others"></div>
-<% end %>
+<!-- 第三部分 创建新任务的表单 只对非访客显示 一开始不出现，按下新增任务按钮后触发 -->
+<div id="new-mission-panel">
+  <div id="missions-new" >
+    <button class="btn new-mission-btn">新增</button>
+    <div class="none">
+    <% if !@user.is_visitor %>
+      <%= render 'missions/new_form' %>
+    <% else %>
+      <div id="others"></div>
+    <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- 第四部分 已完成任务表 一开始只显示向上的箭头，点击后显示。用分页插件进行分页显示 
+  同样，对访客只显示公开的任务
+-->
+<div id="finished-missions-panel">
+  <div class="table-responsive none">
+    <table id="finished-missions-table" class="table table-hover ">
+      <thead>
+        <tr>
+          <th>任务</th>
+          <th class="th-finished-days">打卡天数</th>
+          <th class="th-days">所需打卡天数</th>
+          <th class="th-missed">缺勤</th>
+          <th class="th-drop-out">连续缺勤</th>
+          <th class="th-mission-progress-container"></th>
+          <th colspan="4"></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody id="finished-missions">
+      </tbody>
+    </table>
+  </div>
+</div>
