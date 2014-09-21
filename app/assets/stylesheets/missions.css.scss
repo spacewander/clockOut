@@ -16,7 +16,25 @@
 }
 
 #current-missions, #finished-missions {
-  td.btn {
-    display: inline;
+  
+  td.finished-days, td.days {
+    text-indent: 2em;
+  }
+  
+  td.mission-result {
+    vertical-align: middle;
+  }
+}
+
+#current-missions {
+  & > tr.aborted {
+    background-color: #f2dede;
+    &:hover {
+      background-color: #ebcccc;
+    }
+    
+    .progress-bar {
+      background-color: #d9534f;
+    }
   }
 }

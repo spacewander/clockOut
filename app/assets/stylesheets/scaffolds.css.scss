@@ -38,3 +38,17 @@
 .none {
   display: none;
 }
+
+.center {
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+span.success {
+  color: green;
+}
+
+span.fail {
+  color: red;
+}

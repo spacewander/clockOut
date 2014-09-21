@@ -24,35 +24,49 @@ MissionLoader =
 
   fetchCurrentMissions: ->
     url = "/users/#{@userId}/current_missions"
-    $.get url, (data) ->
+    $.get url, (data) =>
       if data.err
         console.log data.err
+      else if data.currentMissions
+        @__loadCurrentMissionView()
+        @__initCurrentMissionModels(data.currentMissions)
       else
-        MissionLoader.initCurrentMissionModels(data.currentMissions)
+        console.log '加载当前任务失败'
     , 'json'
       .fail ->
         console.log 'fetch current missions fail!'
 
   fetchFinishedMissions: ->
     url = "/users/#{@userId}/finished_missions"
-    $.get url, (data) ->
+    $.get url, (data) =>
       if data.err
         console.log data.err
+      else if data.finishedMissions
+        @__loadFinishedMissionView()
+        @__initFinishedMissionModels(data.finishedMissions)
       else
-        MissionLoader.initFinishedMissionModels(data.finishedMissions)
+        console.log '加载已完成任务失败'
     , 'json'
       .fail ->
         console.log 'fetch finished missions fail!'
 
-  initCurrentMissionModels: (data) ->
+  __loadFinishedMissionView: ->
+    $('#finished-missions-table').show()
+
+  __loadCurrentMissionView: ->
+    $('#current-missions-table').show()
+
+  __initCurrentMissionModels: (data) ->
     view = new CurrentMissionView()
+    view.markAuthority('visitor')
     collection = new CurrentMissionsCollection(view)
     data.forEach (elem, idx) ->
       mission = new Mission(elem)
       collection.add(elem)
 
-  initFinishedMissionModels: (data) ->
+  __initFinishedMissionModels: (data) ->
     view = new FinishedMissionView()
+    view.markAuthority('visitor')
     collection = new FinishedMissionCollection(view)
     data.forEach (elem, idx) ->
       mission = new Mission(elem)

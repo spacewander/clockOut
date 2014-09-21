@@ -183,7 +183,7 @@ $navbar_half_size : 8px;
 // 跟导航条的配置变量一样，因为scss中不能导入单个变量，所以这里重复下
 $navbar-default-bg : rgb(248, 247, 243);
 .nav-one {
-  background-color: adjust-color($navbar-default-bg, $lightness: 30%) !important;
+//  background-color: adjust-color($navbar-default-bg, $lightness: 30%) !important;
 }
 
 .nav-two {

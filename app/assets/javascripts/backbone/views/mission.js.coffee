@@ -9,9 +9,22 @@ class window.CurrentMissionView extends Backbone.View
     'click .clock-out' : 'triggerClockOut'
     'click .abort' : 'triggerAbort'
 
+  # 设置视图权限，不同用户使用的模板有些许不同
+  # 在初始化之后被外界调用
+  markAuthority: (role) ->
+    switch role
+      when 'hoster'
+        @role = 'hoster'
+      when 'visitor'
+        @role = 'visitor'
+      else
+
+    
   # currentMission here is currentMission Object
   addCurrentMission: (currentMission) ->
-    @$el.append(@template(currentMission.attributes))
+    attributes = currentMission.attributes
+    attributes.role = @role
+    @$el.append(@template(attributes))
     @$el
 
   removeCurrentMission: (currentMission) ->
@@ -53,8 +66,20 @@ class window.FinishedMissionView extends Backbone.View
   template: JST.finishedMission
   el: '#finished-missions'
 
+  # 设置视图权限，不同用户使用的模板有些许不同
+  # 在初始化之后被外界调用
+  markAuthority: (role) ->
+    switch role
+      when 'hoster'
+        @role = 'hoster'
+      when 'visitor'
+        @role = 'visitor'
+      else
+
   addFinishedMission: (finishedMission) ->
-    @$el.append(@template(finishedMission.attributes))
+    attributes = finishedMission.attributes
+    attributes.role = @role
+    @$el.append(@template(attributes))
     @$el
 
   removeCurrentMission: (finishedMission) ->
