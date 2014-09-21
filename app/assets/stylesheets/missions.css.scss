@@ -38,3 +38,26 @@
     }
   }
 }
+
+#finished-missions-panel > .dropup, #finished-missions-panel > .dropdown {
+  width: 100%;
+  margin: 40px 0;
+  cursor: pointer;
+  
+  & > .show-finished-missions {
+    margin-left: 40%;
+    font-size: 20px;
+  }
+  
+  & > .caret.up {
+    border-bottom: 8px solid;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+  }
+  
+  & > .caret.down {
+    border-top: 8px solid;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+  }
+}

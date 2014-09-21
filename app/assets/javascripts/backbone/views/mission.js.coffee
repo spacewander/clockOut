@@ -47,7 +47,8 @@ class window.CurrentMissionView extends Backbone.View
   # 在触发服务器端之前，先修改客户端的数据。
   # 即使客户端的数据修改失败，依然会从服务器端获取最新的数据获取最新的数据
   abort: (currentMission) ->
-    currentMission.addClass('aborted')
+    if confirm('你真的打算放弃这项任务吗？是否承认失败？')
+      currentMission.addClass('aborted')
 
   clockOut: (currentMission) ->
     finishedDays = $(currentMission.children('.finished-days'))

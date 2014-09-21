@@ -1,7 +1,8 @@
 window.JST = {}
 missionTemplate = """
     <td class="mission-name">
-      <a class="no-decoration" href="/missions/<%= id %>" alt="<%= content %>">
+      <a id="tooltip" class="no-decoration" href="/missions/<%= id %>"
+        title="<%= content %>">
         <%= name %>
       </a>
     </td>

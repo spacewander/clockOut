@@ -62,12 +62,6 @@ MissionLoader =
     $('#new-mission-btn').click (event) ->
       $('#new-mission-form').show()
 
-  # 展示/隐藏已完成任务的方式，在访客模式和主人模式下都差不多，但是又有一些不同。
-  # 比如主人模式下多了创建新任务的面板。所以这两个函数需要在不同的模式下重新定义
-  bindShowFinishedMissionTrigger: ->
-
-  bindHideFinishedMissionTrigger: ->
-
   fetchCurrentMissions: ->
     url = "/users/current_missions"
     $.get url, (data) =>
@@ -97,26 +91,26 @@ MissionLoader =
         console.log 'fetch finished missions fail!'
 
   __loadFinishedMissionView: ->
-    $('#finished-missions-table').show()
+    $('#finished-missions-panel').show()
 
   __loadCurrentMissionView: ->
-    $('#current-missions-table').show()
+    $('#current-missions-panel').show()
 
   __initCurrentMissionModels: (data) ->
-    view = new CurrentMissionView()
-    view.markAuthority('hoster')
-    collection = new CurrentMissionsCollection(view)
+    @view = new CurrentMissionView()
+    @view.markAuthority('hoster')
+    @collection = new CurrentMissionsCollection(view)
     data.forEach (elem, idx) ->
       mission = new Mission(elem)
-      collection.add(elem)
+      @collection.add(elem)
 
   __initFinishedMissionModels: (data) ->
-    view = new FinishedMissionView()
-    view.markAuthority('hoster')
-    collection = new FinishedMissionCollection(view)
+    @view = new FinishedMissionView()
+    @view.markAuthority('hoster')
+    @collection = new FinishedMissionCollection(view)
     data.forEach (elem, idx) ->
       mission = new Mission(elem)
-      collection.add(elem)
+      @collection.add(elem)
 
 $(document).ready ->
   if $('.users-controller.index-action').length

@@ -18,10 +18,6 @@ MissionLoader =
       else
         # do nothing
     
-  bindShowFinishedMissionTrigger: ->
-
-  bindHideFinishedMissionTrigger: ->
-
   fetchCurrentMissions: ->
     url = "/users/#{@userId}/current_missions"
     $.get url, (data) =>
@@ -51,26 +47,26 @@ MissionLoader =
         console.log 'fetch finished missions fail!'
 
   __loadFinishedMissionView: ->
-    $('#finished-missions-table').show()
+    $('#finished-missions-panel').show()
 
   __loadCurrentMissionView: ->
-    $('#current-missions-table').show()
+    $('#current-missions-panel').show()
 
   __initCurrentMissionModels: (data) ->
-    view = new CurrentMissionView()
-    view.markAuthority('visitor')
-    collection = new CurrentMissionsCollection(view)
+    @view = new CurrentMissionView()
+    @view.markAuthority('visitor')
+    @collection = new CurrentMissionsCollection(view)
     data.forEach (elem, idx) ->
       mission = new Mission(elem)
-      collection.add(elem)
+      @collection.add(elem)
 
   __initFinishedMissionModels: (data) ->
-    view = new FinishedMissionView()
-    view.markAuthority('visitor')
-    collection = new FinishedMissionCollection(view)
+    @view = new FinishedMissionView()
+    @view.markAuthority('visitor')
+    @collection = new FinishedMissionCollection(view)
     data.forEach (elem, idx) ->
       mission = new Mission(elem)
-      collection.add(elem)
+      @collection.add(elem)
 
 
 $(document).ready ->
