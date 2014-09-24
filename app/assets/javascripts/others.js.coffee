@@ -9,8 +9,6 @@ MissionLoader =
       when 'users-controller show-action'
         # 通过解析url来获取用户ID，结果是String类型的
         @userId = window.location.pathname.split('/')[2]
-        @bindShowFinishedMissionTrigger()
-        @bindHideFinishedMissionTrigger()
         @fetchCurrentMissions()
         @fetchFinishedMissions()
       when 'mission-controller show-action'
@@ -55,16 +53,16 @@ MissionLoader =
   __initCurrentMissionModels: (data) ->
     @view = new CurrentMissionView()
     @view.markAuthority('visitor')
-    @collection = new CurrentMissionsCollection(view)
-    data.forEach (elem, idx) ->
+    @collection = new CurrentMissionsCollection(@view)
+    data.forEach (elem, idx) =>
       mission = new Mission(elem)
       @collection.add(elem)
 
   __initFinishedMissionModels: (data) ->
     @view = new FinishedMissionView()
     @view.markAuthority('visitor')
-    @collection = new FinishedMissionCollection(view)
-    data.forEach (elem, idx) ->
+    @collection = new FinishedMissionCollection(@view)
+    data.forEach (elem, idx) =>
       mission = new Mission(elem)
       @collection.add(elem)
 

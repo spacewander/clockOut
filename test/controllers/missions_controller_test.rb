@@ -79,6 +79,16 @@ class MissionsControllerTest < ActionController::TestCase
     assert_equal false, assigns(:user).is_visitor
   end
 
+  test "if session is timeout, user is treated as a visitor" do
+    session[:user_id] = 1
+    session[:last_seen] = 2.days.ago
+    get :clock_out, :id => @mission, :format => 'json'
+    assert_not_nil json_reponse['err']
+    
+    get :abort, :id => @mission, :format => 'json'
+    assert_not_nil json_reponse['err']
+  end
+
   test "if current user is vistor, he should not touch clock_out and abort" do
     get :clock_out, :id => @mission, :format => 'json'
     assert_not_nil json_reponse['err']

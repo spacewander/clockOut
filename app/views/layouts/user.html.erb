@@ -35,7 +35,9 @@
         <ul class="nav navbar-nav navbar-list row  nav-two">
           <% if @navbar %>
             <li class="col-xs-4 navbar-num">当前项目数： <%= @navbar.num %></li>
-            <li class="navbar-name col-xs-4" ><%= link_to @navbar.name, user_path(@navbar.id) %></li>
+            <li class="navbar-name col-xs-4" id="navbar-name">
+              <%= link_to @navbar.name, user_path(@navbar.id) %>
+            </li>
             <li class="col-xs-4"><%= link_to '个人设置', edit_user_path(@navbar.id) %></li>
           <% end %>
         </ul>

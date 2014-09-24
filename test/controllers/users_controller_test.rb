@@ -40,6 +40,31 @@ class UsersControllerTest < ActionController::TestCase
     assert_redirected_to action: 'show', :id => @user.to_param
   end
 
+  test "should clear the sessions of user who want to be forgot" do
+    session[:user_id] = @user.to_param.to_i
+    session[:last_seen] = 2.days.ago
+    get :show, :id => @user.to_param
+    assert_equal nil, session[:user_id]
+    assert_equal nil, session[:last_seen]
+    assert_redirected_to login_path
+  end
+
+  test "should protect from current_missions and finished_missions 
+        for user who want to be forgot" do
+    session[:user_id] = @user.to_param.to_i
+    session[:last_seen] = 2.days.ago
+    get :current_missions, :format => 'json'
+    assert_redirected_to login_path
+  end
+
+  test "should protect from modify method in users_controller
+        for user who want to be forgot" do
+    session[:user_id] = @user.to_param.to_i
+    session[:last_seen] = 2.days.ago
+    put :update, :id => @user.to_param, :user => @input
+    assert_redirected_to login_path
+  end
+
   test "should ban for no-logined user" do
     get :index
     assert_redirected_to login_url
@@ -152,7 +177,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal 1, json_reponse['finishedMissions'].length
   end
 
-  test "should return correct json when get the pulbic_current_missions" do
+  test "should return correct json when get the public_current_missions" do
     get :public_current_missions, :format => 'json', :id => 1
     # 注意在jbuilder中把下划线式的命名转换成驼峰式了
     assert_equal 1, json_reponse['userId']

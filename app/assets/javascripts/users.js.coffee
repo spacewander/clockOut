@@ -49,8 +49,6 @@ MissionLoader =
     switch page
       when 'users-controller show-action'
         @bindNewMissionHandler()
-        @bindShowFinishedMissionTrigger()
-        @bindHideFinishedMissionTrigger()
         @fetchCurrentMissions()
         @fetchFinishedMissions()
       when 'mission-controller show-action'
@@ -99,16 +97,16 @@ MissionLoader =
   __initCurrentMissionModels: (data) ->
     @view = new CurrentMissionView()
     @view.markAuthority('hoster')
-    @collection = new CurrentMissionsCollection(view)
-    data.forEach (elem, idx) ->
+    @collection = new CurrentMissionsCollection(@view)
+    data.forEach (elem, idx) =>
       mission = new Mission(elem)
       @collection.add(elem)
 
   __initFinishedMissionModels: (data) ->
     @view = new FinishedMissionView()
     @view.markAuthority('hoster')
-    @collection = new FinishedMissionCollection(view)
-    data.forEach (elem, idx) ->
+    @collection = new FinishedMissionCollection(@view)
+    data.forEach (elem, idx) =>
       mission = new Mission(elem)
       @collection.add(elem)
 

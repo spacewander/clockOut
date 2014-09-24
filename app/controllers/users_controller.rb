@@ -10,6 +10,8 @@ class UsersController < ApplicationController
                                        :public_current_missions, :public_finished_missions]
   # 有些操作只允许对自己的页面进行
   before_filter :is_hoster, only: [:edit, :update, :destroy]
+  before_filter :check_session_timeout, except: [:new, :create, 
+                                                 :public_current_missions, :public_finished_missions]
 
   authorize_resource :only => [:current_missions, :finished_missions]
 
@@ -108,7 +110,6 @@ class UsersController < ApplicationController
 
   # 获取所有未完成的Missions，更新它们并返回当前的Missions
   def current_missions
-    p 'b'
     @missions = @user.missions.where(finished: false)
     response_current_missions()
   end

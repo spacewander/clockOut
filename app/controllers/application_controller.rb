@@ -3,7 +3,7 @@ require 'digest/sha2'
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
 
   rescue_from CanCan::AccessDenied do |exception|
     @error_message = exception.message
@@ -48,9 +48,15 @@ class ApplicationController < ActionController::Base
   end
 
   def clean_sessions
-    session[:user_id] = nil
-    session[:name] = nil
-    session[:num] = nil
+    reset_session
+  end
+
+  # 当用户需要“忘记我”的时候，设置一个last_seen并确保其不能超过当前时间的一天前
+  def check_session_timeout
+    if session[:last_seen] && ((Time.now - session[:last_seen]) / 1.days).round > 1
+      reset_session
+      return redirect_to login_path
+    end
   end
 
 end

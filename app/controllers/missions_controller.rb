@@ -117,6 +117,10 @@ class MissionsController < ApplicationController
       if @mission
         @user = @mission.user
         unless @user.nil?
+          if session[:last_seen] && ((Time.now - session[:last_seen]) / 1.days).round > 1
+            reset_session
+          end
+
           if @user.id == session[:user_id]
             @user.is_visitor = false
           else
