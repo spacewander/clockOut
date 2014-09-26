@@ -3,6 +3,8 @@ class UsersController < ApplicationController
                                   :public_current_missions, :public_finished_missions]
   before_action :set_user_with_session, only: [:current_missions, :finished_missions]
   before_action :pop_session_info_to_navbar, only: [:show, :edit, :index]
+  before_action :touch_current_missions, only: [:current_missions, :finished_missions, 
+                                                :public_current_missions, :public_finished_missions]
 
   # 各种操作（除了创建用户和返回JSON的前端回调以外）都需要用户登录
   before_filter :has_logined, except: [:new, :create,
@@ -110,44 +112,59 @@ class UsersController < ApplicationController
 
   # 获取所有未完成的Missions，更新它们并返回当前的Missions
   def current_missions
-    @missions = @user.missions.where(finished: false)
+    @missions.to_a.reject! {|mission| mission.finished }
     response_current_missions()
   end
 
   # 获取所有Missions，更新它们并返回已完成的Missions
   def finished_missions
-    @missions = @user.missions.all()
+    @missions = @user.missions(true).where(finished: true).order('updated_at DESC')
+                    .page(params[:page]).per_page(8)
     response_finished_missions()
   end
 
   # 等同于同名无public前缀方法，不过只返回public=true的任务。不需要验证
   def public_current_missions
-    @missions = @user.missions.where(public: true, finished: false)
+    @missions.to_a.reject! {|mission| mission.finished || !mission.public }
     response_current_missions()
   end
 
   # 等同于同名无public前缀方法，不过只返回public=true的任务。不需要验证
   def public_finished_missions
-    @missions = @user.missions.where(public: true)
+    @missions = @user.missions(true).where(public: true, finished: true).order('updated_at DESC')
+                    .page(params[:page]).per_page(8)
     response_finished_missions()
   end
 
-  # 更新Missions数组中的所有Mission，更新缺勤天数，连续缺勤天数和是否失败
-  # missions统一为AssociationRelation类型的数组
-  def update_lost_missions(missions)
-    return if missions.nil?
-    if missions.length == 1
-      update_lost_mission(missions.first)
-    else
-      missions.each do |mission|
-        update_lost_mission(mission)
-      end
-    end
-
-    @user.save
+  # 更新用户当前的任务，如果超时了，把它设为已完成且已失败
+  def touch_current_missions
+    @missions = @user.missions.where(finished: false)
+    update_lost_missions(@missions)
   end
 
   private
+
+    # 更新Missions数组中的所有Mission，更新缺勤天数，连续缺勤天数和是否失败
+    # missions统一为AssociationRelation类型的数组
+    def update_lost_missions(missions)
+      return if missions.nil?
+      if missions.length == 1
+        update_lost_mission(missions.first)
+      else
+        missions.each do |mission|
+          update_lost_mission(mission)
+        end
+      end
+
+      
+      @user.finished_missions += missions.count { |mission| mission.finished == true }
+      @user.current_missions = missions.count { |mission| mission.finished == false }
+      begin
+        @user.save!
+      rescue ActiveRecord::RecordInvalid
+        logger.info "user save failed with #{@user} when update_lost_missions"
+      end
+    end
 
     # 跟cancancan配套使用，注意不需要重新构造用户对象。当前用户不存在则返回nil
     def current_user
@@ -195,43 +212,46 @@ class UsersController < ApplicationController
     # mission为Mission对象
     def update_lost_mission(mission)
       if !mission.finished
+        attributes = {}
         gap_days = (Date.yesterday - mission.last_clock_out.to_date).to_i
 
         if gap_days > 0
-          if mission.drop_out_days == 0
-            mission.drop_out_days = gap_days
-          else
-            mission.drop_out_days += gap_days
-          end
-          check_drop_out_limit(mission)
+          attributes[:drop_out_days] = mission.drop_out_days + gap_days
+          check_drop_out_limit(mission, attributes)
 
-          mission.missed_days += gap_days
-          check_missed_limit(mission)
+          attributes[:missed_days] = mission.missed_days + gap_days
+          check_missed_limit(mission, attributes)
+
+          begin
+            mission.update!(attributes)
+          rescue ActiveRecord::RecordInvalid => e
+            logger.info "update mission failed when update_lost_mission"
+            logger.info e
+          end
         end
       end
     end
 
-    def check_missed_limit(mission)
-      if mission.missed_days >= mission.missed_limit
-        mission.missed_days = mission.missed_limit
-        mission.finished = true
-        mission.aborted = true
+    def check_missed_limit(mission, attributes)
+      if !attributes[:missed_days].nil? &&
+          attributes[:missed_days] >= mission.missed_limit
+        attributes[:missed_days] = mission.missed_limit
+        attributes[:finished] = true
+        attributes[:aborted] = true
       end
     end
 
-    def check_drop_out_limit(mission)
-      if mission.drop_out_days >= mission.drop_out_limit
-        mission.drop_out_days = mission.drop_out_limit
-        mission.finished = true
-        mission.aborted = true
+    def check_drop_out_limit(mission, attributes)
+      if !attributes[:drop_out_days].nil? && 
+          attributes[:drop_out_days] >= mission.drop_out_limit
+        attributes[:drop_out_days] = mission.drop_out_limit
+        attributes[:finished] = true
+        attributes[:aborted] = true
       end
     end
 
     # 包装所有*finished_missions方法的公有处理部分
     def response_finished_missions
-      update_lost_missions(@missions)
-      @missions.to_a.reject! {|mission| !mission.finished }
-
       if !@missions || @missions.empty?
         # 如果用户尚未创建任何任务或没有已完成的任务，返回一个空的json对象
         respond_to { |format| format.json { render json: {} }}
@@ -244,9 +264,6 @@ class UsersController < ApplicationController
 
     # 包装所有*current_missions方法的公有处理部分
     def response_current_missions
-      update_lost_missions(@missions)
-      @missions.to_a.reject! {|mission| mission.finished }
-
       if !@missions || @missions.empty?
         # 如果用户尚未创建任何任务或没有正在进行中的任务，返回一个空的json对象
         respond_to { |format| format.json { render json: {} }}

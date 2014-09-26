@@ -6,7 +6,7 @@ require 'digest/sha2'
 # 系统填充：当前完成天数，缺勤天数，连续缺勤天数，是否结束，是否失败
 # 打卡项目可以选择是否公开，公开的项目将显示于个人主页
 class Mission < ActiveRecord::Base
-  belongs_to :user, autosave: true
+  belongs_to :user, :inverse_of => :missions, :autosave => true
   has_many :supervisions
   #has_many :user, through: :supervisions
   has_many :feelings

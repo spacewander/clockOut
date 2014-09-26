@@ -6,7 +6,7 @@ require 'digest/sha2'
 # 选填：性别，出生日期
 # 系统自动填充：用户序号，最近活跃时间
 class User < ActiveRecord::Base
-  has_many :missions, :dependent => :destroy
+  has_many :missions, :dependent => :destroy, :autosave => true, :inverse_of => :user
   has_many :supervisions
   # 如果指明某个联系，那么就会覆盖第一条has_many，所以暂时不这么干
   #has_many :missions, through: :supervisions

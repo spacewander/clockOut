@@ -9,8 +9,8 @@ class MissionsControllerTest < ActionController::TestCase
       :missed_limit => 10,
       :drop_out_limit => 5,
       :content => "test test and more test",
-      :user_id => 10,
-      :user_token => Mission.encrypt_user_token(10)
+      :user_id => 1,
+      :user_token => Mission.encrypt_user_token(1)
     }
 
   @mission = missions(:one)
@@ -40,6 +40,12 @@ class MissionsControllerTest < ActionController::TestCase
     assert_equal 0, assigns(:mission).finished_days
     assert_equal 0, assigns(:mission).missed_days
     assert_equal 0, assigns(:mission).drop_out_days
+  end
+
+  test "could not create missions for non-existed user" do
+    @input[:user_id] = 10
+    post :create, :mission => @input
+    assert_redirected_to login_path
   end
 
   test "should use user_id and authentication to authenticate user" do

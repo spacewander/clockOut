@@ -26,7 +26,15 @@ class MissionsController < ApplicationController
     @mission.public ||= false
 
     respond_to do |format|
-      if @mission.save
+      if @mission.user && @mission.save
+
+        @mission.user.created_missions += 1
+        begin
+          @mission.save!
+        rescue ActiveRecord::RecordInvalid
+          logger.info "mission save failed with #{@mission} when created "
+        end
+
         format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
                       notice: '任务已成功创建' }
         format.json { render :show, status: :created, location: @mission }

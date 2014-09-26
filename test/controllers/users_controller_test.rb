@@ -12,6 +12,7 @@ class UsersControllerTest < ActionController::TestCase
 
   @user = users(:one)
 
+  # 测试返回结果
   @finished_testcase = {"id"=>281110143, "name"=>"干点啥", "days"=>20, 
                        "missedLimit"=>3, "dropOutLimit"=>2, "aborted"=>true, 
                        "finishedDays"=>15, "missedDays"=>3, "dropOutDays"=>2, "public"=>true}
@@ -94,6 +95,46 @@ class UsersControllerTest < ActionController::TestCase
     session[:user_id] = 2
     get :show, :id => 2
     assert_template layout: "layouts/user", partial: 'missions/_new_form'
+  end
+
+  test "should touch current missions in finished_missions" do
+    session[:user_id] = 1
+
+    assert_difference('Mission.where(finished: false).count', -2) do
+      get :finished_missions, :format => 'json'
+    end
+  end
+
+  test "should touch current missions in current_missions" do
+    session[:user_id] = 1
+
+    assert_difference('Mission.where(finished: false).count', -2) do
+      get :current_missions, :format => 'json'
+    end
+  end
+
+  test "should touch current missions in public_current_missions" do
+    session[:user_id] = 1
+
+    assert_difference('Mission.where(finished: false).count', -2) do
+      get :public_current_missions, :format => 'json', :id => 1
+    end
+  end
+
+  test "should touch current missions in public_finished_missions" do
+    session[:user_id] = 1
+
+    assert_difference('Mission.where(finished: false).count', -2) do
+      get :public_finished_missions, :format => 'json', :id => 1
+    end
+  end
+
+  test "should update missions relative fields in User Table after touch current missions" do
+    session[:user_id] = 1
+    get :finished_missions, :format => 'json'
+    assert_equal 3, assigns(:user).finished_missions
+    assert_equal 2, assigns(:user).current_missions
+    assert_equal 5, assigns(:user).created_missions
   end
 
   test "should redirect to 404 if current user doesn't exist" do

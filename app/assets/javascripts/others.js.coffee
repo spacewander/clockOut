@@ -30,8 +30,12 @@ MissionLoader =
       .fail ->
         console.log 'fetch current missions fail!'
 
-  fetchFinishedMissions: ->
-    url = "/users/#{@userId}/finished_missions"
+  fetchFinishedMissions: (page = 0) ->
+    if page == 0
+      url = "/users/#{@userId}/finished_missions"
+    else
+      url = "/users/#{@userId}/finished_missions?#{page}"
+
     $.get url, (data) =>
       if data.err
         console.log data.err

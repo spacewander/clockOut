@@ -12,9 +12,9 @@ one:
   email: a@123.com
   last_actived: 2014-08-17
   member_no: 1
-  created_missions: 4
+  created_missions: 5
   finished_missions: 1
-  current_missions: 3
+  current_missions: 4
 
 wrong:
   id: 2
@@ -36,6 +36,7 @@ session:
   password_hash: <%= User.encrypt_password('mima', SALT)%>
   salt: <%= SALT %>
   email: test@gmail.com
+  member_no: 3
 
 four:
   id: 4
@@ -43,6 +44,7 @@ four:
   password_hash: <%= User.encrypt_password('secret', SALT)%>
   salt: <%= SALT %>
   email: test@163.com
+  member_no: 4
 
 five:
   id: 5
@@ -50,3 +52,4 @@ five:
   password_hash: <%= User.encrypt_password('secret', SALT)%>
   salt: <%= SALT %>
   email: test@qq.com
+  member_no: 5

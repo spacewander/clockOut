@@ -83,4 +83,9 @@
       </tbody>
     </table>
   </div>
+  <% if @missions %>
+  <div class="will-paginate">
+    <%= will_paginate @missions, renderer: BootstrapPagination::Rails, previous_label: "前一页", next_label: "后一页" %>
+  </div>
+  <% end %>
 </div>
