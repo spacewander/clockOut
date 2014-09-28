@@ -25,7 +25,7 @@ class window.MissionsCollection extends Backbone.Collection
   model: Mission
   url: '/missions'
 
-  initialize: (view) ->
+  initialize: (view) =>
     @view = view
 
   # 计算完成率，用于进度条的显示
@@ -51,6 +51,8 @@ class window.CurrentMissionsCollection extends MissionsCollection
     @on 'add', (mission) ->
       @calculatePercents(mission)
       @view.addCurrentMission(mission)
+    @on 'reset', () ->
+      @view.cleanAll()
 
 
 class window.FinishedMissionCollection extends MissionsCollection
@@ -59,4 +61,6 @@ class window.FinishedMissionCollection extends MissionsCollection
     @on 'add', (mission) ->
       @calculatePercents(mission)
       @view.addFinishedMission(mission)
+    @on 'reset', () ->
+      @view.cleanAll()
 

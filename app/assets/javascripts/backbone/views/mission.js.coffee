@@ -20,6 +20,9 @@ class window.CurrentMissionView extends Backbone.View
       else
 
     
+  cleanAll: () ->
+    @$el.html('')
+
   # currentMission here is currentMission Object
   addCurrentMission: (currentMission) ->
     attributes = currentMission.attributes
@@ -76,6 +79,9 @@ class window.FinishedMissionView extends Backbone.View
       when 'visitor'
         @role = 'visitor'
       else
+
+  cleanAll: () ->
+    @$el.html('')
 
   addFinishedMission: (finishedMission) ->
     attributes = finishedMission.attributes

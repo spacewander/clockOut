@@ -26,7 +26,6 @@ class Mission < ActiveRecord::Base
                     less_than: 10000, message: '注意日期限制！' }
 
   validate :special_days_cannot_greater_than_total_days
-  validate :limit_cannot_greater_than_toal_days
 
   def special_days_cannot_greater_than_total_days
     return unless finished_days && missed_days && drop_out_days && days
@@ -35,15 +34,6 @@ class Mission < ActiveRecord::Base
     errors.add(:missed_days, '缺勤日期不能超过总日期') if missed_days > days
     if drop_out_days > days
       errors.add(:drop_out_days, '连续缺勤日期不能超过总日期') 
-    end
-  end
-
-  def limit_cannot_greater_than_toal_days
-    return unless missed_limit && drop_out_limit && days
-
-    errors.add(:missed_limit, '缺勤限制不能超过总日期') if missed_limit > days
-    if drop_out_limit > days
-      errors.add(:drop_out_limit, '连续缺勤限制不能超过总日期') 
     end
   end
 

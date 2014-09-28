@@ -28,7 +28,8 @@ class MissionsController < ApplicationController
     respond_to do |format|
       if @mission.user && @mission.save
 
-        @mission.user.created_missions += 1
+        created_missions = @mission.user.created_missions + 1
+        @mission.user.update(created_missions: created_missions)
         begin
           @mission.save!
         rescue ActiveRecord::RecordInvalid
@@ -39,7 +40,8 @@ class MissionsController < ApplicationController
                       notice: '任务已成功创建' }
         format.json { render :show, status: :created, location: @mission }
       else
-        #p @mission.errors.full_messages
+        logger.debug "任务创建失败"
+        logger.debug @mission.errors.full_messages
         format.html { redirect_to user_path(params['mission'][:user_id].to_i), 
                       notice: '任务创建失败'}
         format.json { render json: @mission.errors, status: 

@@ -9,6 +9,9 @@ MissionLoader =
       when 'users-controller show-action'
         # 通过解析url来获取用户ID，结果是String类型的
         @userId = window.location.pathname.split('/')[2]
+        @authority = 'visitor'
+        CommonMissionLoader.loadCurrentMissionView(@authority)
+        CommonMissionLoader.loadFinishedMissionView(@authority)
         @fetchCurrentMissions()
         @fetchFinishedMissions()
       when 'mission-controller show-action'
@@ -18,57 +21,41 @@ MissionLoader =
     
   fetchCurrentMissions: ->
     url = "/users/#{@userId}/current_missions"
-    $.get url, (data) =>
-      if data.err
+    $.get url, (data) ->
+      if data.currentMissions
+        CommonMissionLoader.initCurrentMissionModels(data.currentMissions)
+        return
+      else if data.err
         console.log data.err
-      else if data.currentMissions
-        @__loadCurrentMissionView()
-        @__initCurrentMissionModels(data.currentMissions)
       else
-        console.log '加载当前任务失败'
+        console.log data
+
+      CommonMissionLoader.hideCurrentMissionView()
     , 'json'
       .fail ->
         console.log 'fetch current missions fail!'
+        CommonMissionLoader.hideCurrentMissionView()
 
-  fetchFinishedMissions: (page = 0) ->
-    if page == 0
+  fetchFinishedMissions: (page = 1) ->
+    if page == 1
       url = "/users/#{@userId}/finished_missions"
     else
       url = "/users/#{@userId}/finished_missions?#{page}"
 
-    $.get url, (data) =>
-      if data.err
+    $.get url, (data) ->
+      if data.finishedMissions
+        CommonMissionLoader.initFinishedMissionModels(data.finishedMissions)
+        return
+      else if data.err
         console.log data.err
-      else if data.finishedMissions
-        @__loadFinishedMissionView()
-        @__initFinishedMissionModels(data.finishedMissions)
       else
-        console.log '加载已完成任务失败'
+        console.log data
+
+      CommonMissionLoader.hideFinishedMissionView()
     , 'json'
       .fail ->
         console.log 'fetch finished missions fail!'
-
-  __loadFinishedMissionView: ->
-    $('#finished-missions-panel').show()
-
-  __loadCurrentMissionView: ->
-    $('#current-missions-panel').show()
-
-  __initCurrentMissionModels: (data) ->
-    @view = new CurrentMissionView()
-    @view.markAuthority('visitor')
-    @collection = new CurrentMissionsCollection(@view)
-    data.forEach (elem, idx) =>
-      mission = new Mission(elem)
-      @collection.add(elem)
-
-  __initFinishedMissionModels: (data) ->
-    @view = new FinishedMissionView()
-    @view.markAuthority('visitor')
-    @collection = new FinishedMissionCollection(@view)
-    data.forEach (elem, idx) =>
-      mission = new Mission(elem)
-      @collection.add(elem)
+        CommonMissionLoader.hideFinishedMissionView()
 
 
 $(document).ready ->

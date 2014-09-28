@@ -66,10 +66,4 @@ class MissionTest < ActiveSupport::TestCase
     assert_invalid(mission, 'missed_days')
   end
 
-  test "limit cannot greater than total days" do
-    mission = new_mission()
-    mission.missed_limit = 91
-    assert_invalid(mission, 'missed_limit')
-  end
-
 end

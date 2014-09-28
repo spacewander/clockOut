@@ -47,7 +47,6 @@ gem 'byebug', '~> 3.2.0', group: [:development, :test]
 # for bootstrap
 gem 'bootstrap-sass', '~> 3.2.0'
 gem 'autoprefixer-rails'
-gem 'will_paginate-bootstrap'
 gem 'bootstrap_helper'
 gem 'bootstrap_form'
 

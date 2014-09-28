@@ -2,6 +2,7 @@
 
 <% content_for(:javascript) do %>
   <%= javascript_include_tag 'sessions', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'missions', 'data-turbolinks-track' => true %>
   <% if @user.is_visitor %>
     <!-- js for vistor -->
     <%= javascript_include_tag 'others', 'data-turbolinks-track' => true %>
@@ -9,18 +10,26 @@
     <!-- js for hoster -->
     <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => true %>
   <% end %>
-  <%= javascript_include_tag 'missions', 'data-turbolinks-track' => true %>
+  
 <% end %>
 
 <!-- 第一部分 全局的提示栏 -->
+<% content_for(:notice) do %>
 <div class="mission-notice">
-  <p id="error"><%= notice %></p>
+ <% if notice %>
+ <div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <p id="error"><%= notice %></p>
+  </div>
+  <% end %>
 </div>
+
+<% end %>
 
 <!-- 第二部分 当前任务表 如果是访客， 只显示所有公开的任务 用具体加载的js文件来控制获取数据的方式 
   不分页，所有的当前任务显示在同一页中
 -->
-<div id="current-missions-panel" class="none">
+<div id="current-missions-panel">
   <div class="table-responsive">
     <table id="current-missions-table" class="table table-hover">
       <thead>
@@ -60,7 +69,7 @@
 <!-- 第四部分 已完成任务表 一开始只显示向上的箭头，点击后显示。用分页插件进行分页显示 
   同样，对访客只显示公开的任务
 -->
-<div id="finished-missions-panel" class="none">
+<div id="finished-missions-panel">
   <div class="drop dropup">
     <span class="show-finished-missions">显示已完成的任务</span>
     <span class="caret up"></span>
@@ -85,7 +94,7 @@
   </div>
   <% if @missions %>
   <div class="will-paginate">
-    <%= will_paginate @missions, renderer: BootstrapPagination::Rails, previous_label: "前一页", next_label: "后一页" %>
+    <%= will_paginate @missions, :params => { :controller => "users", :action => "finished_missions" }, renderer: BootstrapPagination::Rails, previous_label: "前一页", next_label: "后一页" %>
   </div>
   <% end %>
 </div>

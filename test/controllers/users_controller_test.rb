@@ -22,6 +22,7 @@ class UsersControllerTest < ActionController::TestCase
                        "aborted"=>false, "finished"=>false, "public"=>true, "supervised"=>true}
   end 
 
+  # 测试一般的http方法和用户访问权限的控制
   test "should use layouts/user as layout" do
     get :index
     assert_template layout: ["layouts/user", "user"]
@@ -97,6 +98,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_template layout: "layouts/user", partial: 'missions/_new_form'
   end
 
+  # 测试是否会更新所有未完成的任务
   test "should touch current missions in finished_missions" do
     session[:user_id] = 1
 
@@ -129,6 +131,7 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
+  # 测试finished current 系列路由，包括返回值，对错误输入的过滤等等
   test "should update missions relative fields in User Table after touch current missions" do
     session[:user_id] = 1
     get :finished_missions, :format => 'json'
@@ -197,6 +200,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal true, json_reponse.empty?
   end
 
+  # 测试public_* 系列路由，包括返回值，对错误输入的过滤等等
   test "public_* method should return {} when user doesn't have any public mission" do
     get :public_finished_missions, :id => 3, :format => "json"
     assert_equal true, json_reponse.empty?
@@ -240,6 +244,7 @@ class UsersControllerTest < ActionController::TestCase
       json_reponse['finishedMissions']
   end
 
+  # 测试cancan
   test "authorize current_missions and finished_missions with cancancan" do
     @user.is_visitor = true
     ability = Ability.new(@user)
@@ -250,6 +255,63 @@ class UsersControllerTest < ActionController::TestCase
     ability = Ability.new(@user)
     assert ability.can?(:current_missions, User)
     assert ability.can?(:finished_missions, User)
+  end
+
+  # 测试分页功能
+  test "paginate with finished_missions: a too large page number given" do
+    session[:user_id] = 1
+    get :finished_missions, :format => 'json', :id => 1, :page => 100
+    assert_equal true, json_reponse.empty?
+  end
+
+  test "paginate with public_finished_missions: a too large page number given" do
+    get :public_finished_missions, :format => 'json', :id => 1, :page => 100
+    assert_equal true, json_reponse.empty?
+  end
+
+  test "paginate with finished_missions: error page param given" do
+    session[:user_id] = 1
+    get :finished_missions, :format => 'json', :id => 1, :page => 'haha'
+    assert_equal 1, json_reponse['userId']
+    # 过滤后的任务数
+    assert_equal 3, json_reponse['finishedMissions'].length
+  end
+
+  test "paginate with public_finished_missions: error page param given" do
+    get :public_finished_missions, :format => 'json', :id => 1, :page => 'haha'
+    assert_equal 1, json_reponse['userId']
+    # 过滤后的任务数
+    assert_equal 3, json_reponse['finishedMissions'].length
+
+    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase),
+      json_reponse['finishedMissions']
+  end
+
+  # 测试获取Mission资源时，用户id有错的情况
+  test "if the user id is wrong when get Mission resource" do
+    get :public_finished_missions, :format => 'json', :id => 'haha'
+    assert_response 404
+    get :public_current_missions, :format => 'json', :id => 'haha'
+    assert_response 404
+
+    session[:user_id] = 100
+    get :finished_missions, :format => 'json', :id => 100
+    assert_response 404
+    get :current_missions, :format => 'json', :id => 100
+    assert_response 404
+  end
+
+  test "if the user not found with given id when get Mission resource" do
+    get :public_finished_missions, :format => 'json', :id => 'haha'
+    assert_response 404
+    get :public_current_missions, :format => 'json', :id => 'haha'
+    assert_response 404
+
+    session[:user_id] = 100
+    get :finished_missions, :format => 'json', :id => 100
+    assert_response 404
+    get :current_missions, :format => 'json', :id => 100
+    assert_response 404
   end
 
 end

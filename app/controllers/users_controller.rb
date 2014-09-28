@@ -42,7 +42,7 @@ class UsersController < ApplicationController
       @mission.user_id = session[:user_id]
       @mission.user_token= session[:user_id]
     end
-    
+
     render
   end
 
@@ -112,27 +112,35 @@ class UsersController < ApplicationController
 
   # 获取所有未完成的Missions，更新它们并返回当前的Missions
   def current_missions
-    @missions.to_a.reject! {|mission| mission.finished }
+    @missions = @user.missions(true).where(finished: false).order('updated_at DESC')
     response_current_missions()
   end
 
   # 获取所有Missions，更新它们并返回已完成的Missions
   def finished_missions
+    page = params[:page].to_i
+    if page.nil? || page <= 0
+      page = 1
+    end
     @missions = @user.missions(true).where(finished: true).order('updated_at DESC')
-                    .page(params[:page]).per_page(8)
+                    .limit(8).offset((page - 1) * 8)
     response_finished_missions()
   end
 
   # 等同于同名无public前缀方法，不过只返回public=true的任务。不需要验证
   def public_current_missions
-    @missions.to_a.reject! {|mission| mission.finished || !mission.public }
+    @missions = @user.missions(true).where(public: true, finished: false).order('updated_at DESC')
     response_current_missions()
   end
 
   # 等同于同名无public前缀方法，不过只返回public=true的任务。不需要验证
   def public_finished_missions
+    page = params[:page].to_i
+    if page.nil? || page <= 0
+      page = 1
+    end
     @missions = @user.missions(true).where(public: true, finished: true).order('updated_at DESC')
-                    .page(params[:page]).per_page(8)
+                    .limit(8).offset((page - 1) * 8)
     response_finished_missions()
   end
 

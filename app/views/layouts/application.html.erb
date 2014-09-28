@@ -16,6 +16,7 @@
   <%#在用户登录后显示导航条%>
   <%= yield :navbar %>
   <div class="container-fluid" id="main">
+    <%= yield :notice %>
     <div class="row">
       <div class="clockOut-panel col-xs-12 col-md-8 col-md-offset-2" id="panel">
         <%= yield %>
