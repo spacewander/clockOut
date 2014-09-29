@@ -200,6 +200,13 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal true, json_reponse.empty?
   end
 
+  test "should return page num of finished_missions" do
+    session[:user_id] = 1
+    get :finished_missions, :format => 'json', :id => 1
+    # PAGE_SIZE = 8, and finished_missions = 3
+    assert_equal 1, json_reponse['pageNum']
+  end
+
   # 测试public_* 系列路由，包括返回值，对错误输入的过滤等等
   test "public_* method should return {} when user doesn't have any public mission" do
     get :public_finished_missions, :id => 3, :format => "json"
@@ -242,6 +249,12 @@ class UsersControllerTest < ActionController::TestCase
 
     assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase),
       json_reponse['finishedMissions']
+  end
+
+  test "should return page num of public_finished_missions" do
+    get :public_finished_missions, :format => 'json', :id => 1
+    # PAGE_SIZE = 8, and public finished_missions = 3
+    assert_equal 1, json_reponse['pageNum']
   end
 
   # 测试cancan

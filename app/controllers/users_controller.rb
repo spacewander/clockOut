@@ -19,6 +19,9 @@ class UsersController < ApplicationController
 
   layout 'user'
 
+  # 设置每次分页的大小
+  PAGE_SIZE = 8
+
   # GET /users
   # GET /users.json
   def index
@@ -122,8 +125,17 @@ class UsersController < ApplicationController
     if page.nil? || page <= 0
       page = 1
     end
-    @missions = @user.missions(true).where(finished: true).order('updated_at DESC')
-                    .limit(8).offset((page - 1) * 8)
+
+    # collectons.where的结果会被缓存下来
+    @missions_num = @user.missions(true).where(finished: true).count
+                          .fdiv(PAGE_SIZE).ceil
+    if page <= @missions_num
+      @missions = @user.missions.where(finished: true).order('updated_at DESC')
+                      .limit(PAGE_SIZE).offset((page - 1) * PAGE_SIZE)
+    else
+      @missions = nil
+    end
+
     response_finished_missions()
   end
 
@@ -139,8 +151,16 @@ class UsersController < ApplicationController
     if page.nil? || page <= 0
       page = 1
     end
-    @missions = @user.missions(true).where(public: true, finished: true).order('updated_at DESC')
-                    .limit(8).offset((page - 1) * 8)
+
+    @missions_num = @user.missions(true).where(public: true, finished: true).count
+                          .fdiv(PAGE_SIZE).ceil
+    if page <= @missions_num
+      @missions = @user.missions.where(public: true, finished: true).order('updated_at DESC')
+                    .limit(PAGE_SIZE).offset((page - 1) * PAGE_SIZE)
+    else
+      @missions = nil
+    end
+
     response_finished_missions()
   end
 

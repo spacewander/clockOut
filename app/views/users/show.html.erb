@@ -74,8 +74,8 @@
     <span class="show-finished-missions">显示已完成的任务</span>
     <span class="caret up"></span>
   </div>
-  <div class="table-responsive">
-    <table id="finished-missions-table" class="table table-hover none">
+  <div class="table-responsive none" id="finished-missions-table" >
+    <table class="table table-hover">
       <thead>
         <tr>
           <th>已完成任务</th>
@@ -91,10 +91,24 @@
       <tbody id="finished-missions">
       </tbody>
     </table>
+     
+    <div class="finished-panel-bottom">
+      <ul class="pagination" id="pagination">
+        <li id="last-page" class="page-action"><a>&laquo;</a></li>
+        <li class="ellipsis" id="left-ellipsis"><a>...</a></li>
+        <!-- data-num是页数编号，不随页数的值改变而改变 -->
+        <li data-num="1" class="page-num"><a>1</a></li>
+        <li data-num="2" class="page-num"><a>2</a></li>
+        <li data-num="3" class="page-num"><a>3</a></li>
+        <li data-num="4" class="page-num"><a>4</a></li>
+        <li data-num="5" class="page-num"><a>5</a></li>
+        <li data-num="6" class="page-num"><a>6</a></li>
+        <li data-num="7" class="page-num"><a>7</a></li>
+        <li data-num="8" class="page-num"><a>8</a></li>
+        <li data-num="9" class="page-num"><a>9</a></li>
+        <li class="ellipsis" id="right-ellipsis"><a>...</a></li>
+        <li id="next-page" class="page-action"><a>&raquo;</a></li>
+      </ul>
+    </div>
   </div>
-  <% if @missions %>
-  <div class="will-paginate">
-    <%= will_paginate @missions, :params => { :controller => "users", :action => "finished_missions" }, renderer: BootstrapPagination::Rails, previous_label: "前一页", next_label: "后一页" %>
-  </div>
-  <% end %>
 </div>

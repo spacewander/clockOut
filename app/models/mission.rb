@@ -31,10 +31,6 @@ class Mission < ActiveRecord::Base
     return unless finished_days && missed_days && drop_out_days && days
 
     errors.add(:finished_days, '完成日期不能超过总日期') if finished_days > days
-    errors.add(:missed_days, '缺勤日期不能超过总日期') if missed_days > days
-    if drop_out_days > days
-      errors.add(:drop_out_days, '连续缺勤日期不能超过总日期') 
-    end
   end
 
   # 修改任务需要用户认证

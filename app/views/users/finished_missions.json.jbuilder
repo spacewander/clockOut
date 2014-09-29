@@ -6,6 +6,8 @@ json.key_format! camelize: :lower
 json.user_id @missions[0].user_id
 json.created_at Time.now
 
+# 输出已完成任务分页数。注意是分页数而不是总数！如果是public_finished_missions，则只显示公开任务的数目
+json.page_num @missions_num
 json.finished_missions @missions do |mission|
   json.id mission.id
   json.name mission.name

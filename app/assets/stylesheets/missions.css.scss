@@ -63,3 +63,28 @@
     border-left: 8px solid transparent;
   }
 }
+
+.finished-panel-bottom {
+  // 实现水平居中
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pagination {
+
+  & > li.ellipsis {
+    display: none;
+  }
+  
+  & > li.page-num {
+    & > a {
+      cursor: pointer;
+    }
+  }
+  
+  & > li.page-action {
+    & > a {
+      cursor: pointer;
+    }
+  }
+}
