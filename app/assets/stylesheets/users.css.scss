@@ -205,3 +205,91 @@ $navbar-default-bg : rgb(248, 247, 243);
     font-size: 16px;
   }
 }
+
+#mission_content {
+  height: 100px;
+}
+
+.mission-notice {
+  margin-left: 15%;
+  margin-right: 15%;
+  z-index: 9999;
+  
+ p {
+    color: rgb(207, 55, 55);
+    font-size: 20px;
+    text-align: center;
+  }
+}
+
+#current-missions, #finished-missions {
+  
+  td.finished-days, td.days {
+    text-indent: 2em;
+  }
+  
+  td.mission-result {
+    vertical-align: middle;
+  }
+}
+
+#current-missions {
+  & > tr.aborted {
+    background-color: #f2dede;
+    &:hover {
+      background-color: #ebcccc;
+    }
+    
+    .progress-bar {
+      background-color: #d9534f;
+    }
+  }
+}
+
+#finished-missions-panel > .dropup, #finished-missions-panel > .dropdown {
+  width: 100%;
+  margin: 40px 0;
+  cursor: pointer;
+  
+  & > .show-finished-missions {
+    margin-left: 40%;
+    font-size: 20px;
+  }
+  
+  & > .caret.up {
+    border-bottom: 8px solid;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+  }
+  
+  & > .caret.down {
+    border-top: 8px solid;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+  }
+}
+
+.finished-panel-bottom {
+  // 实现水平居中
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pagination {
+
+  & > li.ellipsis {
+    display: none;
+  }
+  
+  & > li.page-num {
+    & > a {
+      cursor: pointer;
+    }
+  }
+  
+  & > li.page-action {
+    & > a {
+      cursor: pointer;
+    }
+  }
+}
