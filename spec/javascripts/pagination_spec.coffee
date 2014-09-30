@@ -68,15 +68,15 @@ describe 'CommonMissionLoader#updatePaginationBar will', ->
 
   it "当当前页码为1时，禁止前一页;当前页面为最末页时，禁止后一页。否则两个方向的翻页均可用", ->
     CommonMissionLoader.updatePaginationBar(12, 1)
-    expect($('#last-page').hasClass('disable')).toEqual true
-    expect($('#next-page').hasClass('disable')).toEqual false
+    expect($('#last-page').hasClass('disabled')).toEqual true
+    expect($('#next-page').hasClass('disabled')).toEqual false
     CommonMissionLoader.updatePaginationBar(12, 12)
-    expect($('#last-page').hasClass('disable')).toEqual false
-    expect($('#next-page').hasClass('disable')).toEqual true
+    expect($('#last-page').hasClass('disabled')).toEqual false
+    expect($('#next-page').hasClass('disabled')).toEqual true
     CommonMissionLoader.updatePaginationBar(12, 4)
-    expect($('#last-page').hasClass('disable')).toEqual false
-    expect($('#next-page').hasClass('disable')).toEqual false
+    expect($('#last-page').hasClass('disabled')).toEqual false
+    expect($('#next-page').hasClass('disabled')).toEqual false
     CommonMissionLoader.updatePaginationBar(12, 1)
-    expect($('#last-page').hasClass('disable')).toEqual true
-    expect($('#next-page').hasClass('disable')).toEqual false
+    expect($('#last-page').hasClass('disabled')).toEqual true
+    expect($('#next-page').hasClass('disabled')).toEqual false
     

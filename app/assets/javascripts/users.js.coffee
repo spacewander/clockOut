@@ -116,4 +116,9 @@ $(document).ready ->
       console.log finished
       $(elem).find('.progress-container').append(User.generalProgressBar(
         User.getPercentsFromMissions(finished, created)))
+  else if $('.users-controller.show-action').length
+    # 覆盖掉bootstrap警告框默认的关闭方法，现在不会把整个警告框DOM移除了，只是隐藏了起来
+    $('button.close').unbind('click').click (event) ->
+      $('#alert-bar').fadeOut()
+      event.stopImmediatePropagation()
 

@@ -16,10 +16,21 @@
 <!-- 第一部分 全局的提示栏 -->
 <% content_for(:notice) do %>
 <div class="mission-notice">
- <% if notice %>
- <div class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <% if notice %>
+  <div class="alert alert-danger alert-dismissible" id="alert-bar" role="alert">
+    <button type="button" class="close" data-dismiss="alert">
+     <span aria-hidden="true">&times;</span>
+     <span class="sr-only">Close</span>
+    </button>
     <p id="error"><%= notice %></p>
+  </div>
+  <% else %>
+  <div class="alert alert-danger alert-dismissible" id="alert-bar" role="alert" style="display: none;">
+    <button type="button" class="close" data-dismiss="alert">
+     <span aria-hidden="true">&times;</span>
+     <span class="sr-only">Close</span>
+    </button>
+    <p id="error"></p>
   </div>
   <% end %>
 </div>

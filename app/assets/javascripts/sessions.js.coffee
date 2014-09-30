@@ -118,6 +118,9 @@ FormHelper =
 
   # 以下用于创建打卡任务的表单
   repleceNotice: (msg) ->
+    if $('#alert-bar:hidden').length
+      $('#alert-bar').show()
+
     $('#error').text(msg)
 
   bindMissionNameChecker: ->

@@ -62,8 +62,8 @@ class MissionTest < ActiveSupport::TestCase
 
   test "special days cannot greater than total days" do
     mission = new_mission()
-    mission.missed_days = 91
-    assert_invalid(mission, 'missed_days')
+    mission.finished_days = 91
+    assert_invalid(mission, 'finished_days')
   end
 
 end
