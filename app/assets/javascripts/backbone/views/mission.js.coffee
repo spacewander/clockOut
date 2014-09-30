@@ -52,6 +52,12 @@ class window.CurrentMissionView extends Backbone.View
   abort: (currentMission) ->
     if confirm('你真的打算放弃这项任务吗？是否承认失败？')
       currentMission.addClass('aborted')
+      $.get "/missions/#{currentMission.attr('data-id')}/abort", (data) ->
+        if data.err
+          console.log "abort mission #{currentMission.attr('data-id')} failed"
+          console.log data.err
+      , 'json'
+
 
   clockOut: (currentMission) ->
     finishedDays = $(currentMission.children('.finished-days'))
@@ -64,6 +70,16 @@ class window.CurrentMissionView extends Backbone.View
       $(currentMission.find('.drop-out-days')).text('0')
     catch e
       # do nothing
+    finally
+      id = currentMission.attr('data-id')
+      $.get "/missions/#{id}/clockout", (data) ->
+        if data.err
+          console.log "clockOut mission #{id} failed"
+          console.log data.err
+      , 'json'
+        .fail ->
+          console.log "clockOut mission #{id} failed"
+
 
 
 class window.FinishedMissionView extends Backbone.View
