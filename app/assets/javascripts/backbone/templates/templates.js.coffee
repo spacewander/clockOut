@@ -1,4 +1,34 @@
 window.JST = {}
+window.JST.currentThead = _.template """
+<thead id="current-missions-thead">
+        <tr>
+          <th>当前任务</th>
+          <th class="th-finished-days">打卡天数</th>
+          <th class="th-days">所需打卡天数</th>
+          <th class="th-missed">缺勤</th>
+          <th class="th-drop-out">连续缺勤</th>
+          <th class="th-mission-progress-container"></th>
+          <% if (role === 'hoster') { %>
+          <th colspan="4"></th>
+          <% } %>
+        </tr>
+</thead>
+"""
+
+window.JST.finishedThead = _.template """
+<thead id="finished-missions-thead">
+        <tr>
+          <th>已完成任务</th>
+          <th class="th-finished-days">打卡天数</th>
+          <th class="th-days">所需打卡天数</th>
+          <th class="th-missed">缺勤</th>
+          <th class="th-drop-out">连续缺勤</th>
+          <th class="th-mission-progress-container"></th>
+          <th colspan="1"></th>
+        </tr>
+</thead>
+"""
+
 missionTemplate = """
     <td class="mission-name">
       <a id="tooltip" class="no-decoration" href="/missions/<%= id %>"
@@ -38,14 +68,19 @@ window.JST.currentMission = _.template """
       </div>
     </td>
     <% if (role === 'hoster') { %>
-    <td class="clock-out">
-      <div class="btn btn-success">打卡</div>
-    </td>
+      <% if (canClockOut) { %>
+      <td class="clock-out">
+        <div class="btn btn-success">打卡</div>
+      <% } else { %>
+      <td class="has-clocked-out">
+        <div class="btn btn-success">已打卡</div>
+      <% } %>
+      </td>
     <% if (public) { %>
-    <td class="private">
+    <td class="private property-btn">
       <div class="btn btn-warning">私有</div>
     <% } else { %>
-    <td class="public">
+    <td class="public property-btn">
       <div class="btn btn-warning">公开</div>
     <% } %>
     </td>

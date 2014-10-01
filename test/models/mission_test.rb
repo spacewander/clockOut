@@ -17,7 +17,8 @@ class MissionTest < ActiveSupport::TestCase
                       :finished => false,
                       :aborted => false,
                       :public => true,
-                      :supervised => false)
+                      :supervised => false,
+                      :last_clock_out => Date.today)
   end
   
   test "name, day, limit cannot be empty" do
@@ -64,6 +65,13 @@ class MissionTest < ActiveSupport::TestCase
     mission = new_mission()
     mission.finished_days = 91
     assert_invalid(mission, 'finished_days')
+  end
+
+  test "测试can_clock_out能否正确判断" do
+    mission = new_mission()
+    assert_equal false, mission.can_clock_out
+    mission.last_clock_out = Date.yesterday
+    assert_equal true, mission.can_clock_out
   end
 
 end

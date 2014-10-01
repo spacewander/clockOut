@@ -22,4 +22,6 @@ json.current_missions @missions do |mission|
   json.finished mission.finished
   json.public mission.public
   json.supervised mission.supervised
+  # 添加can_clock_out属性。由服务器端计算完是否需要打卡
+  json.can_clock_out mission.can_clock_out
 end

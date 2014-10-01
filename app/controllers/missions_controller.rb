@@ -1,11 +1,13 @@
 class MissionsController < ApplicationController
-  before_action :set_mission, only: [:show, :update, :destroy, :clock_out, :abort]
-  before_action :do_not_change_finished_mission, only: [:update, :clock_out, :abort]
+  before_action :set_mission, only: [:show, :update, :destroy, :clock_out, 
+                                     :abort, :publish]
+  before_action :do_not_change_finished_mission, only: [:update, :clock_out, 
+                                                        :abort, :publish]
 
   # 需要添加对于提交人的信息的验证，只有用户本人才能修改个人的任务
   before_filter :authenticate_for_user, only: [:create, :edit, :update, :destroy]
 
-  authorize_resource :only => [:clock_out, :abort]
+  authorize_resource :only => [:clock_out, :abort, :publish]
 
   # GET /users/1
   # GET /users/1.json
@@ -80,6 +82,11 @@ class MissionsController < ApplicationController
 
   # 每天打卡身心健康
   def clock_out
+    # last_clock_out精确到天
+    if !@mission.can_clock_out
+      return render json: { err: '一天只能打卡一次' }
+    end
+
     @mission.finished_days += 1
     @mission.drop_out_days = 0
     @mission.last_clock_out = Date.today
@@ -94,6 +101,17 @@ class MissionsController < ApplicationController
   def abort
     @mission.aborted = true
     @mission.finished = true
+
+    save_and_return_current_mission
+  end
+
+  # 切换公开和私有状态
+  def publish
+    if @mission.public
+      @mission.public = false
+    else
+      @mission.public = true
+    end
 
     save_and_return_current_mission
   end

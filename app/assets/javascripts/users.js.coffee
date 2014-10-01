@@ -50,8 +50,6 @@ window.MissionLoader =
       when 'users-controller show-action'
         @authority = 'hoster'
         @bindNewMissionHandler()
-        CommonMissionLoader.loadFinishedMissionView(@authority)
-        CommonMissionLoader.loadCurrentMissionView(@authority)
         @fetchCurrentMissions()
         @fetchFinishedMissions()
       when 'mission-controller show-action'
@@ -65,20 +63,18 @@ window.MissionLoader =
 
   fetchCurrentMissions: ->
     url = "/users/current_missions"
-    $.get url, (data) ->
+    $.get url, (data) =>
       if data.currentMissions
+        CommonMissionLoader.loadCurrentMissionView(@authority)
         CommonMissionLoader.initCurrentMissionModels(data.currentMissions)
         return
       else if data.err
         console.log data.err
       else
         console.log data
-
-      CommonMissionLoader.hideCurrentMissionView()
     , 'json'
       .fail ->
         console.log 'fetch current missions fail!'
-        CommonMissionLoader.hideCurrentMissionView()
 
   fetchFinishedMissions: (page = 1) ->
     if page == 1
@@ -86,8 +82,9 @@ window.MissionLoader =
     else
       url = "/users/finished_missions?page=#{page}"
 
-    $.get url, (data) ->
+    $.get url, (data) =>
       if data.finishedMissions
+        CommonMissionLoader.loadFinishedMissionView(@authority)
         currentPageNum = Number($('li.active > a').text())
         currentPageNum = 1 if !currentPageNum
         CommonMissionLoader.updatePaginationBar(
@@ -101,11 +98,9 @@ window.MissionLoader =
       else
         console.log data
 
-      CommonMissionLoader.hideFinishedMissionView()
     , 'json'
       .fail ->
         console.log 'fetch finished missions fail!'
-        CommonMissionLoader.hideFinishedMissionView()
 
 
 $(document).ready ->

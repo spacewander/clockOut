@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     member do
       get 'clockout' => :clock_out
       get 'abort' => :abort
+      get 'publish' => :publish
     end
   end
 

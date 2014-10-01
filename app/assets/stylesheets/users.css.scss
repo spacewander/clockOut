@@ -206,10 +206,13 @@ $navbar-default-bg : rgb(248, 247, 243);
   }
 }
 
+/* about users#show_edit_mission */
 #mission_content {
   height: 100px;
 }
 
+/* about users#show */
+/* 下面依次是users#show的四个面板：提示、当前任务、历史任务、分页*/
 .mission-notice {
   margin-left: 15%;
   margin-right: 15%;
@@ -220,12 +223,12 @@ $navbar-default-bg : rgb(248, 247, 243);
     font-size: 20px;
     text-align: center;
   }
-}
+} 
 
 #current-missions, #finished-missions {
   
   td.finished-days, td.days {
-    text-indent: 2em;
+    text-indent: 1em;
   }
   
   td.mission-result {
@@ -243,6 +246,12 @@ $navbar-default-bg : rgb(248, 247, 243);
     .progress-bar {
       background-color: #d9534f;
     }
+  }
+  
+  // 缩小进度条和任务名以外各项的面积
+  td .btn {
+    padding: 6px 8px;
+    border: none;
   }
 }
 

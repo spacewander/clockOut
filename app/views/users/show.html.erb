@@ -25,6 +25,7 @@
     <p id="error"><%= notice %></p>
   </div>
   <% else %>
+<!--   如果没有notice需要渲染， 那么默认不显示警告框，直到需要显示时才显示 -->
   <div class="alert alert-danger alert-dismissible" id="alert-bar" role="alert" style="display: none;">
     <button type="button" class="close" data-dismiss="alert">
      <span aria-hidden="true">&times;</span>
@@ -43,19 +44,6 @@
 <div id="current-missions-panel">
   <div class="table-responsive">
     <table id="current-missions-table" class="table table-hover">
-      <thead>
-        <tr>
-          <th>当前任务</th>
-          <th class="th-finished-days">打卡天数</th>
-          <th class="th-days">所需打卡天数</th>
-          <th class="th-missed">缺勤</th>
-          <th class="th-drop-out">连续缺勤</th>
-          <th class="th-mission-progress-container"></th>
-          <% if !@user.is_visitor %>
-          <th colspan="4"></th>
-          <% end %>
-        </tr>
-      </thead>
 
       <tbody id="current-missions">
       </tbody>
@@ -87,17 +75,6 @@
   </div>
   <div class="table-responsive none" id="finished-missions-table" >
     <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>已完成任务</th>
-          <th class="th-finished-days">打卡天数</th>
-          <th class="th-days">所需打卡天数</th>
-          <th class="th-missed">缺勤</th>
-          <th class="th-drop-out">连续缺勤</th>
-          <th class="th-mission-progress-container"></th>
-          <th colspan="1"></th>
-        </tr>
-      </thead>
 
       <tbody id="finished-missions">
       </tbody>

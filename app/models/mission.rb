@@ -44,6 +44,15 @@ class Mission < ActiveRecord::Base
     user_token != "" && user_token == encrypt_user_token(user_id)
   end
 
+  # 如果尚未打卡，返回true;否则返回false
+  def can_clock_out
+    # last_clock_out精确到天
+    if (Date.today - last_clock_out).to_i < 1
+      return false
+    end
+    return true
+  end
+
   private
 
   # 加密用户token，用于修改任务时认证用户身份

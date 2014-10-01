@@ -15,11 +15,13 @@ class UsersControllerTest < ActionController::TestCase
   # 测试返回结果
   @finished_testcase = {"id"=>281110143, "name"=>"干点啥", "days"=>20, 
                        "missedLimit"=>3, "dropOutLimit"=>2, "aborted"=>true, 
-                       "finishedDays"=>15, "missedDays"=>3, "dropOutDays"=>2, "public"=>true}
+                       "finishedDays"=>15, "missedDays"=>3, "dropOutDays"=>2, 
+                       "public"=>true}
   @current_testcase = {"id"=>298486374, "name"=>"刷代码", "days"=>100, 
                        "missedLimit"=>20, "dropOutLimit"=>10, "finishedDays"=>99, 
                        "missedDays"=>4, "dropOutDays"=>1, "content"=>"就是刷代码", 
-                       "aborted"=>false, "finished"=>false, "public"=>true, "supervised"=>true}
+                       "aborted"=>false, "finished"=>false, "public"=>true, 
+                       "supervised"=>true, "canClockOut"=>true}
   end 
 
   # 测试一般的http方法和用户访问权限的控制

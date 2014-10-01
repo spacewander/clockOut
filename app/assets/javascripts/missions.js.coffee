@@ -6,19 +6,15 @@
 window.CommonMissionLoader =
   loadFinishedMissionView: (authority = 'visitor') ->
     @finishedView = new FinishedMissionView()
-    @finishedView.markAuthority(authority)
+    @finishedView.role = authority
+    @finishedView.insertThead()
     @finishedMissions = new FinishedMissionCollection(@finishedView)
-
-  hideFinishedMissionView: ->
-    $('#finished-missions-panel').hide()
 
   loadCurrentMissionView: (authority = 'visitor') ->
     @currentView = new CurrentMissionView()
-    @currentView.markAuthority(authority)
+    @currentView.role = authority
+    @currentView.insertThead()
     @currentMissions = new CurrentMissionsCollection(@currentView)
-
-  hideCurrentMissionView: ->
-    $('#current-missions-panel').hide()
 
   initCurrentMissionModels: (data) ->
     @currentMissions.reset()
@@ -113,16 +109,6 @@ UserShowAction =
       if $(this).attr('href') == window.location.pathname
         event.preventDefault()
 
-  recoverPanels: (isCurrentMissionsHidden, isFinishedMissionsHidden) ->
-    if isCurrentMissionsHidden
-      $('#current-missions-panel').hide()
-    else
-      $('#current-missions-panel').show()
-    if isFinishedMissionsHidden
-      $('#finished-missions-panel').hide()
-    else
-      $('#finished-missions-panel').show()
-      
   # 根据页数来获取对应的finished missions
   fetchPageNum: (pageNum) ->
     MissionLoader.fetchFinishedMissions(pageNum)
@@ -159,8 +145,6 @@ $(document).ready ->
     UserShowAction.addPaginationListener()
 
     $('#finished-missions-panel > .drop').click (event) ->
-      isCurrentMissionsHidden = $('#current-missions-panel:hidden').length
-      isFinishedMissionsHidden = $('#finished-missions-panel:hidden').length
       if $(this).hasClass('dropup')
         UserShowAction.togglePanels()
 
@@ -173,7 +157,4 @@ $(document).ready ->
         $(this).children('.show-finished-missions').text('显示已完成的任务')
         $(this).children('.caret').toggleClass('up down')
         $(this).toggleClass('dropup dropdown')
-
-      UserShowAction.recoverPanels(isCurrentMissionsHidden,
-                                    isFinishedMissionsHidden)
 

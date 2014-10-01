@@ -61,6 +61,7 @@ class MissionsControllerTest < ActionController::TestCase
     assert_redirected_to login_url
   end
 
+  # if user is a visitor
   test "should set is_visitor attribute when user.id is not the same with which 
         in session or there is not user_id in session" do
     get :clock_out, :id => @mission, :format => 'json' # trigger current_user private method
@@ -103,6 +104,7 @@ class MissionsControllerTest < ActionController::TestCase
     assert_not_nil json_reponse['err']
   end
 
+  # abort, clock_out, and publish
   test "get clock_out should add finished_days and update mission" do
     session[:user_id] = @mission.user_id
     get :clock_out, :id => @mission, :format => 'json'
@@ -118,6 +120,14 @@ class MissionsControllerTest < ActionController::TestCase
     assert_equal true, json_reponse['finished']
   end
 
+  test "一天只能打卡一次" do
+    session[:user_id] = missions(:two).user_id
+    get :clock_out, :id => missions(:two), :format => 'json'
+    get :clock_out, :id => missions(:two), :format => 'json'
+
+    assert_not_nil json_reponse['err']
+  end
+
   test "get abort should abort given mission" do
     session[:user_id] = @mission.user_id
     get :abort, :id => @mission, :format => 'json'
@@ -126,28 +136,45 @@ class MissionsControllerTest < ActionController::TestCase
     assert_equal true, json_reponse['finished']
   end
 
-  test "abort, clock_out, and update only work at unfinished mission" do
+  test "publish public mission will make it private" do
+    session[:user_id] = missions(:two).user_id
+    get :publish, :id => missions(:two), :format => 'json'
+    assert_equal false, assigns(:mission).public
+  end
+
+  test "publish private mission will make it public" do
+    session[:user_id] = missions(:one).user_id
+    get :publish, :id => missions(:one), :format => 'json'
+    assert_equal true, assigns(:mission).public
+  end
+
+  test "abort, clock_out, publish and update only work at unfinished mission" do
     session[:user_id] = @finished_mission.user_id
     error_message = '不能修改已完成的任务！'
+
     put :update, :id => @finished_mission, :format => 'json'
     assert_equal error_message, json_reponse['err']
     get :abort, :id => @finished_mission, :format => 'json'
     assert_equal error_message, json_reponse['err']
     get :clock_out, :id => @finished_mission, :format => 'json'
     assert_equal error_message, json_reponse['err']
+    get :publish, :id => @finished_mission, :format => 'json'
+    assert_equal error_message, json_reponse['err']
   end
 
-  test "authorize clock_out and abort with cancancan" do
+  test "authorize clock_out and abort, publish with cancancan" do
     @user = users(:one)
     @user.is_visitor = true
     ability = Ability.new(@user)
     assert ability.cannot?(:clock_out, Mission)
     assert ability.cannot?(:abort, Mission)
+    assert ability.cannot?(:publish, Mission)
 
     @user.is_visitor = false
     ability = Ability.new(@user)
     assert ability.can?(:clock_out, Mission)
     assert ability.can?(:abort, Mission)
+    assert ability.can?(:publish, Mission)
   end
 
 end
