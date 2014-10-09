@@ -241,7 +241,7 @@ class UsersController < ApplicationController
     def update_lost_mission(mission)
       if !mission.finished
         attributes = {}
-        attributes[:last_clock_out] = Date.today
+        attributes[:last_clock_out] = Date.yesterday
         gap_days = (Date.yesterday - mission.last_clock_out.to_date).to_i
 
         if gap_days > 0

@@ -1,10 +1,14 @@
 describe 'CommonMissionLoader#updatePaginationBar will', ->
+  setActivePageNum =  (num) ->
+    $('li.active').removeClass('active')
+    $("li[data-num=#{num}]").addClass('active')
+
   beforeEach () ->
     jasmine.getFixtures().set("""
    <ul class="pagination" id="pagination">
         <li id="last-page" class="page-action"><a>&laquo;</a></li>
         <li class="ellipsis" id="left-ellipsis"><a>...</a></li>
-        <li data-num="1" class="page-num"><a>1</a></li>
+        <li data-num="1" class="page-num active"><a>1</a></li>
         <li data-num="2" class="page-num"><a>2</a></li>
         <li data-num="3" class="page-num"><a>3</a></li>
         <li data-num="4" class="page-num"><a>4</a></li>
@@ -17,6 +21,7 @@ describe 'CommonMissionLoader#updatePaginationBar will', ->
         <li id="next-page" class="page-action"><a>&raquo;</a></li>
       </ul>
     """)
+
 
   it "hide #pagination when totalPageNum < 2", ->
     CommonMissionLoader.updatePaginationBar(1, 1)
@@ -80,3 +85,28 @@ describe 'CommonMissionLoader#updatePaginationBar will', ->
     expect($('#last-page').hasClass('disabled')).toEqual true
     expect($('#next-page').hasClass('disabled')).toEqual false
     
+  it "测试前一页/后一页在当前页为第一页下正常", ->
+    UserShowAction.addPaginationListener()
+    $("#last-page").click()
+    expect($('li.active').attr('data-num')).toBe '1'
+    setActivePageNum(1) # reset
+    $("#next-page").click()
+    expect($('li.active').attr('data-num')).toBe '2'
+
+  it "测试前一页/后一页在当前页为最后一页下正常", ->
+    setActivePageNum(9)
+    UserShowAction.addPaginationListener()
+    $("#last-page").click()
+    expect($('li.active').attr('data-num')).toBe '8'
+    setActivePageNum(9) # reset
+    $("#next-page").click()
+    expect($('li.active').attr('data-num')).toBe '9'
+
+  it "测试前一页/后一页在当前页为其他页下正常", ->
+    setActivePageNum(3)
+    UserShowAction.addPaginationListener()
+    $("#last-page").click()
+    expect($('li.active').attr('data-num')).toBe '2'
+    setActivePageNum(3) # reset
+    $("#next-page").click()
+    expect($('li.active').attr('data-num')).toBe '4'

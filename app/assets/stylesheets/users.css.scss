@@ -1,6 +1,7 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+$brand-primary : #14bbb4; // keep the same with one in application.css
 /* about new user */
 #new_user {
   padding-bottom: 20px;
@@ -260,9 +261,16 @@ $navbar-default-bg : rgb(248, 247, 243);
   margin: 40px 0;
   cursor: pointer;
   
+  $notice_font_size : 20px;
+  
   & > .show-finished-missions {
     margin-left: 40%;
-    font-size: 20px;
+    font-size: $notice_font_size;
+  }
+  
+  & > .caret {
+    color: $brand-primary;
+    margin-bottom: $notice_font_size / 4;
   }
   
   & > .caret.up {

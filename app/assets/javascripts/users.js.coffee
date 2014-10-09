@@ -50,8 +50,6 @@ window.MissionLoader =
       when 'users-controller show-action'
         @authority = 'hoster'
         @bindNewMissionHandler()
-        @fetchCurrentMissions()
-        @fetchFinishedMissions()
       when 'mission-controller show-action'
 
       else
@@ -92,6 +90,8 @@ window.MissionLoader =
           currentPageNum
         )
         CommonMissionLoader.initFinishedMissionModels(data.finishedMissions)
+
+        CommonMissionLoader.changeRouteHash()
         return
       else if data.err
         console.log data.err
@@ -100,7 +100,7 @@ window.MissionLoader =
 
     , 'json'
       .fail ->
-        console.log 'fetch finished missions fail!'
+        console.log 'fetch finished missions fail!' # 该输出用于检查是否去抓取对应数据
 
 
 $(document).ready ->
@@ -108,7 +108,6 @@ $(document).ready ->
     $('#user-index > tbody > tr').each (idx, elem) ->
       finished = $(elem).find('.finished-missions').text()
       created = $(elem).find('.created-missions').text()
-      console.log finished
       $(elem).find('.progress-container').append(User.generalProgressBar(
         User.getPercentsFromMissions(finished, created)))
   else if $('.users-controller.show-action').length

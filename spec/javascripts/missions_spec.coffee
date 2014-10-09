@@ -196,3 +196,19 @@ describe 'Finished Mission : ', () ->
     expect($('.finished-mission[data-id=4] .mission-result').text().trim())
       .toBe '失败'
 
+describe 'UsersRouter : ', () ->
+  beforeEach () ->
+    jasmine.getFixtures().set("""
+    <button id="new-mission-btn"><button>
+    <div class="table-responsive none" id="finished-missions-table" >
+        <table class="table table-hover">
+          <tbody id="finished-missions"></tbody>
+        </table>
+    </div>
+    """)
+
+  it "会根据路由修改url", ->
+    router = new UsersRouter()
+    Backbone.history.start()
+    router.navigate('/finishedMissions/1', {trigger: true})
+    expect(window.location.hash).toBe '#finishedMissions/1'

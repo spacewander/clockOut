@@ -4,6 +4,15 @@
 
 # 提取MissionLoader的公共部分。因为JS不支持通常意义上的继承，所以改用MissionLoader来调用该类实现公共部分
 window.CommonMissionLoader =
+  changeRouteHash: ->
+    # 如果为第一页且历史任务被隐藏起来，则不改变路由
+    if !($('#finished-missions-table').length && page == 1)
+      window.usersRouter?.navigate(
+        "finishedMissions/#{page}",
+        trigger: false
+      )
+
+
   loadFinishedMissionView: (authority = 'visitor') ->
     @finishedView = new FinishedMissionView()
     @finishedView.role = authority
@@ -110,8 +119,10 @@ UserShowAction =
         event.preventDefault()
 
   # 根据页数来获取对应的finished missions
+  # pageNum本应该是Number，不过许多地方直接拿String来调用了，所以这里就不改了。
   fetchPageNum: (pageNum) ->
-    MissionLoader.fetchFinishedMissions(pageNum)
+    if /\d+/.test(pageNum) && Number(pageNum) > 0
+      MissionLoader.fetchFinishedMissions(pageNum)
 
   fetchLast: () ->
     active = $('li.active')
@@ -134,12 +145,16 @@ UserShowAction =
         $("li.page-num").each (idx, elem) ->
           $(elem).removeClass('active')
         $(this).addClass('active')
+        console.log this
         UserShowAction.fetchPageNum($(this).children().text())
 
 
 $(document).ready ->
   if $('.users-controller.show-action').length
     MissionLoader.init()
+    if !window.usersRouter
+      window.usersRouter = new UsersRouter()
+      Backbone.history.start()
 
     UserShowAction.preventReload()
     UserShowAction.addPaginationListener()
@@ -158,3 +173,11 @@ $(document).ready ->
         $(this).children('.caret').toggleClass('up down')
         $(this).toggleClass('dropup dropdown')
 
+    # 不需要处理hash路由，则手动获取数据
+    if !window.location.hash
+      MissionLoader.fetchCurrentMissions()
+      MissionLoader.fetchFinishedMissions()
+    else
+      MissionLoader.fetchCurrentMissions()
+      $('#finished-missions-panel > .drop').click()
+      $("li[data-num=#{window.location.hash.split('/')[1]}]").click()

@@ -10,8 +10,6 @@ window.MissionLoader =
         # 通过解析url来获取用户ID，结果是String类型的
         @userId = window.location.pathname.split('/')[2]
         @authority = 'visitor'
-        @fetchCurrentMissions()
-        @fetchFinishedMissions()
       when 'mission-controller show-action'
 
       else
@@ -49,6 +47,8 @@ window.MissionLoader =
           currentPageNum
         )
         CommonMissionLoader.initFinishedMissionModels(data.finishedMissions)
+
+        CommonMissionLoader.changeRouteHash()
         return
       else if data.err
         console.log data.err
@@ -57,5 +57,5 @@ window.MissionLoader =
 
     , 'json'
       .fail ->
-        console.log 'fetch finished missions fail!'
+        console.log 'fetch finished missions fail!' # 该输出用于检查是否去抓取对应数据
 

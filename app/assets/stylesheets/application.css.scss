@@ -18,6 +18,8 @@ $table-border-color : #D1EEEE;
 $table-bg-hover : #DFF8F7;
 $navbar-default-bg : rgb(248, 247, 243);
 $grid-float-breakpoint : 1100px;
+$brand-primary : #14bbb4;
+$dropdown-caret-color : $brand-primary;
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
