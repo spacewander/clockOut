@@ -12,6 +12,7 @@ one:
   email: a@123.com
   last_actived: 2014-08-17
   member_no: 1
+  # 下面三项数据是瞎掰的……
   created_missions: 5
   finished_missions: 1
   current_missions: 4
@@ -45,6 +46,9 @@ four:
   salt: <%= SALT %>
   email: test@163.com
   member_no: 4
+  created_missions: 1
+  finished_missions: 0
+  current_missions: 1
 
 five:
   id: 5

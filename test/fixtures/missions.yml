@@ -127,3 +127,19 @@ eight:
   user_id: 5
   supervised: false
   last_clock_out: <%= 1.day.ago.to_s() %>
+
+nine:
+  name: 打卡之后就完成的任务
+  days: 20
+  finished_days: 19
+  missed_days: 0
+  missed_limit: 3
+  drop_out_days: 0
+  drop_out_limit: 2
+  content: 用来测试打卡能否修改对应用户的完成/当前任务数
+  finished: false
+  aborted: false
+  public: true
+  user_id: 1
+  supervised: false
+  last_clock_out: <%= 2.day.ago.to_s() %>

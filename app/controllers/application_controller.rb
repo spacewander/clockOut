@@ -59,4 +59,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # 如果更新一个对象失败了，记录下失败的报告
+  def logger_update_failed(update_object, attrs, msg)
+    begin
+      update_object.update!(attrs)
+    rescue ActiveRecord::RecordInvalid => e
+      logger.info msg
+      logger.info e
+    end
+  end
+
 end

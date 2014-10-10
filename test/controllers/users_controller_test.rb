@@ -134,12 +134,34 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   # 测试finished current 系列路由，包括返回值，对错误输入的过滤等等
+  test "should update missions relative fields in User Table after touch finished missions" do
+    session[:user_id] = 1
+    get :finished_missions, :format => 'json'
+    assert_equal 3, assigns(:user).finished_missions
+    assert_equal 3, assigns(:user).current_missions
+  end
+
+  test "同一天多次访问finished_missions路由不会导致数据的不同" do
+    session[:user_id] = 1
+    get :finished_missions, :format => 'json'
+    get :finished_missions, :format => 'json'
+    assert_equal 3, assigns(:user).finished_missions
+    assert_equal 3, assigns(:user).current_missions
+  end
+
   test "should update missions relative fields in User Table after touch current missions" do
     session[:user_id] = 1
     get :finished_missions, :format => 'json'
     assert_equal 3, assigns(:user).finished_missions
-    assert_equal 2, assigns(:user).current_missions
-    assert_equal 5, assigns(:user).created_missions
+    assert_equal 3, assigns(:user).current_missions
+  end
+
+  test "同一天多次访问current_missions路由不会导致数据的不同" do
+    session[:user_id] = 1
+    get :current_missions, :format => 'json'
+    get :current_missions, :format => 'json'
+    assert_equal 3, assigns(:user).finished_missions
+    assert_equal 3, assigns(:user).current_missions
   end
 
   test "should redirect to 404 if current user doesn't exist" do
@@ -161,10 +183,12 @@ class UsersControllerTest < ActionController::TestCase
     # 过滤后的任务数
     assert_equal 3, json_reponse['finishedMissions'].length
 
-    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase),
+    assert_equal true, 
+      json_reponse['finishedMissions'].include?(@finished_testcase),
       json_reponse['finishedMissions']
     assert_equal true, 
-      json_reponse['finishedMissions'][1]['missed_days'] == json_reponse['finishedMissions'][1]['missed_limit']
+      json_reponse['finishedMissions'][1]['missed_days'] == 
+      json_reponse['finishedMissions'][1]['missed_limit']
   end
 
   test "should return {} when user doesn't create any mission" do
@@ -190,9 +214,10 @@ class UsersControllerTest < ActionController::TestCase
     # 注意在jbuilder中把下划线式的命名转换成驼峰式了
     assert_equal 1, json_reponse['userId']
     # 过滤后的任务数
-    assert_equal 2, json_reponse['currentMissions'].length
+    assert_equal 3, json_reponse['currentMissions'].length
 
-    assert_equal true, json_reponse['currentMissions'].include?(@current_testcase),
+    assert_equal true, 
+      json_reponse['currentMissions'].include?(@current_testcase),
       json_reponse['currentMissions']
   end
 
@@ -236,9 +261,10 @@ class UsersControllerTest < ActionController::TestCase
     # 注意在jbuilder中把下划线式的命名转换成驼峰式了
     assert_equal 1, json_reponse['userId']
     # 过滤后的任务数
-    assert_equal 1, json_reponse['currentMissions'].length
+    assert_equal 2, json_reponse['currentMissions'].length
 
-    assert_equal true, json_reponse['currentMissions'].include?(@current_testcase),
+    assert_equal true, 
+      json_reponse['currentMissions'].include?(@current_testcase),
       json_reponse['currentMissions']
   end
 
@@ -249,7 +275,8 @@ class UsersControllerTest < ActionController::TestCase
     # 过滤后的任务数
     assert_equal 3, json_reponse['finishedMissions'].length
 
-    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase),
+    assert_equal true, 
+      json_reponse['finishedMissions'].include?(@finished_testcase),
       json_reponse['finishedMissions']
   end
 
@@ -298,7 +325,8 @@ class UsersControllerTest < ActionController::TestCase
     # 过滤后的任务数
     assert_equal 3, json_reponse['finishedMissions'].length
 
-    assert_equal true, json_reponse['finishedMissions'].include?(@finished_testcase),
+    assert_equal true, 
+      json_reponse['finishedMissions'].include?(@finished_testcase),
       json_reponse['finishedMissions']
   end
 

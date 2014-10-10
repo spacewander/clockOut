@@ -1,3 +1,74 @@
 // Place all the styles related to the Missions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+// 用于标识访客身份的元素
+#authority {
+  display: none;
+}
+
+// 以下内容用于显示任务细节
+#mission-detail-panel {
+  margin-top: 20px;
+  
+  .mission-box {
+    height: 60px;
+    $font_size: 15px;
+    font-size: $font_size;
+    line-height: $font_size * 1.2;
+    
+    & > .row {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+    
+    .mission-item {
+      font-weight: bold;
+    }
+  }
+}
+
+#mission-name-box {
+  text-align: center;
+}
+
+#mission-name {
+  font-size: 25px;
+  font-weight: bold;
+  text-overflow: ellipsis;
+}
+
+// 以下内容用于显示任务描述
+#mission-content-panel {
+  margin-top: 40px;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 20px;
+}
+
+#mission-content {
+  $font_size : 20px;
+  font-size: $font_size;
+  line-height: $font_size * 1.4;
+  text-indent: 2em;
+  text-overflow: ellipsis;
+  
+  &::first-letter {
+    font-size: $font_size * 1.5;
+    font-weight: bold;
+  }
+  
+}
+
+#mission-editor {
+  position: relative;
+  
+  .btn {
+    display: inline;
+    position: absolute;
+    // left的数值取决于按钮的宽度
+    left: 85%;
+    // top的数值取决于按钮的高度
+    top: 60%;
+    z-index: 999;
+  }
+}

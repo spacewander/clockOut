@@ -1,0 +1,53 @@
+<% content_for(:javascript) do %>
+  <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => true %>
+<% end %>
+
+<div id="authority"><%= @authority %></div>
+<div id="mission-detail-panel">
+  <div class="row">
+    <div class="col-xs-12 col-md-6 mission-box" id="mission-name-box">
+      <div id="mission-name"><%= @mission.name %></div>
+    </div>
+    <div class="col-xs-12 col-md-6 mission-box" id="mission-completed-box">
+      <div class="row">
+        <div id="mission-completed" class="mission-item col-xs-4">完成率</div>
+        <div class="mission-progress-bar col-xs-4"><%= progress_bar(@finished_percents, alternative:'success') %></div>
+        <div class="scale col-xs-4"><%= @mission.finished_days %>/<%= @mission.days %></div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 mission-box" id="mission-missed-box">
+      <div id="mission-missed" class="mission-item col-xs-4">缺勤指标</div>
+      <div class="mission-progress-bar col-xs-4"><%= progress_bar(@missed_percents, alternative:'warning') %></div>
+      <div class="scale col-xs-4"><%= @mission.missed_days %>/<%= @mission.missed_limit %></div>
+    </div>
+    <div class="col-xs-12 col-md-6 mission-box" id="mission-drop-out-box">
+      <div id="mission-drop-out" class="mission-item col-xs-4">连续缺勤指标</div>
+      <div class="mission-progress-bar col-xs-4"><%= progress_bar(@drop_out_percents, alternative:'danger') %></div>
+      <div class="scale col-xs-4"><%= @mission.drop_out_days %>/<%= @mission.drop_out_limit %></div>
+    </div>
+  </div>
+</div>
+
+<div id="mission-content-panel">
+  <% if @authority == 'hoster' %>
+<!--
+  <div id="mission-content" class="content-editable">
+    <%= @mission.content %>
+  </div>
+-->
+<!--  <div id="mission-editor" class="none">-->
+   <div id="mission-editor">
+    <textarea class="form-control" rows="5" maxlength="140" placeholder="不能超过140个字">
+      <%= @mission.content %>
+    </textarea>
+    <button class="btn btn-default">更新</button>
+  </div>
+  <% else %>
+  <div id="mission-content">
+    <%= @mission.content %>
+  </div>
+  <% end %>
+</div>
+
+
+<div id="feelings"></div>

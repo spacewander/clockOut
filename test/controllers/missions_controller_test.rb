@@ -17,6 +17,7 @@ class MissionsControllerTest < ActionController::TestCase
   @finished_mission = missions(:five)
   end 
 
+  # 基本的crud操作
   test "should filter wrong mission id required" do
     get :show, :id => 0
     assert_response 404
@@ -28,6 +29,21 @@ class MissionsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to user_path(@input[:user_id])
+  end
+
+  test "should strip mission.name and mission.content" do
+    @input[:name] = "     strip it!  "
+    @input[:content] = "  hate whitespace!  "
+    post :create, :mission => @input
+    assert_equal 'strip it!', assigns(:mission).name
+    assert_equal 'hate whitespace!', assigns(:mission).content
+  end
+
+  test "should change user's created_missions and current_missions" do
+    post :create, :mission => @input
+    user = User.find(@input[:user_id])
+    assert_equal 6, user.created_missions
+    assert_equal 5, user.current_missions
   end
 
   test "should init some required attributes when create mission, 
@@ -128,12 +144,31 @@ class MissionsControllerTest < ActionController::TestCase
     assert_not_nil json_reponse['err']
   end
 
+  test "should change user's finished_missions and current_missions if need" do
+    session[:user_id] = missions(:nine).user_id
+    get :clock_out, :id => missions(:nine), :format => 'json'
+    user = User.find(1)
+    assert_equal 5, user.created_missions
+    assert_equal 3, user.current_missions
+    assert_equal 2, user.finished_missions
+    assert_equal true, assigns(:mission).finished
+  end
+
   test "get abort should abort given mission" do
     session[:user_id] = @mission.user_id
     get :abort, :id => @mission, :format => 'json'
 
     assert_equal true, json_reponse['aborted']
     assert_equal true, json_reponse['finished']
+  end
+
+  test "should change user attrs after abort" do
+    session[:user_id] = missions(:seven).user_id
+    get :abort, :id => missions(:seven), :format => 'json'
+    user = User.find(missions(:seven).user_id)
+    assert_equal 1, user.created_missions
+    assert_equal 0, user.current_missions
+    assert_equal 1, user.finished_missions
   end
 
   test "publish public mission will make it private" do

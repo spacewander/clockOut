@@ -185,8 +185,12 @@ class UsersController < ApplicationController
       end
 
       
-      @user.finished_missions += missions.count { |mission| mission.finished == true }
-      @user.current_missions = missions.count { |mission| mission.finished == false }
+      # 完成原因：abort
+      finished = 0
+      missions.length.times { |l| finished += 1 if missions[l].finished == true }
+      @user.finished_missions += finished
+      @user.current_missions = missions.length - finished
+
       begin
         @user.save!
       rescue ActiveRecord::RecordInvalid
@@ -251,12 +255,8 @@ class UsersController < ApplicationController
           attributes[:missed_days] = mission.missed_days + gap_days
           check_missed_limit(mission, attributes)
 
-          begin
-            mission.update!(attributes)
-          rescue ActiveRecord::RecordInvalid => e
-            logger.info "update mission failed when update_lost_mission"
-            logger.info e
-          end
+          msg = "update mission failed when update_lost_mission"
+          logger_update_failed(mission, attributes, msg)
         end
       end
     end

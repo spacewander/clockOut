@@ -2,13 +2,13 @@
 
 <% content_for(:javascript) do %>
   <%= javascript_include_tag 'sessions', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'missions', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => true %>
   <% if @user.is_visitor %>
     <!-- js for vistor -->
     <%= javascript_include_tag 'others', 'data-turbolinks-track' => true %>
   <% else %>
     <!-- js for hoster -->
-    <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'hoster', 'data-turbolinks-track' => true %>
   <% end %>
   
 <% end %>

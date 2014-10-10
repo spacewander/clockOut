@@ -1,4 +1,5 @@
 class MissionsController < ApplicationController
+  before_action :pop_session_info_to_navbar, only: [:show]
   before_action :set_mission, only: [:show, :update, :destroy, :clock_out, 
                                      :abort, :publish]
   before_action :do_not_change_finished_mission, only: [:update, :clock_out, 
@@ -9,15 +10,32 @@ class MissionsController < ApplicationController
 
   authorize_resource :only => [:clock_out, :abort, :publish]
 
-  # GET /users/1
-  # GET /users/1.json
+  layout 'user'
+
+  # GET /missions/1
   def show
+    if session[:user_id] != @mission.user_id
+      @authority = 'visitor'
+    else
+      @authority = 'hoster'
+    end
+
+    @finished_percents = calculatePercents(@mission.finished_days, @mission.days)
+    @missed_percents = calculatePercents(@mission.missed_days, @mission.missed_limit)
+    @drop_out_percents = calculatePercents(@mission.drop_out_days, @mission.drop_out_limit)
+
+    respond_to do |format|
+      format.html { render }
+    end
   end
 
   # POST /missions
   # POST /missions.json
   def create
     @mission = Mission.new(mission_params)
+    # 去掉名字和描述两边的空白
+    @mission.name.strip!
+    @mission.content.strip!
 
     # 初始化当前进展记录
     @mission.finished_days = 0
@@ -31,7 +49,10 @@ class MissionsController < ApplicationController
       if @mission.user && @mission.save
 
         created_missions = @mission.user.created_missions + 1
+        current_missions = @mission.user.current_missions + 1
         @mission.user.update(created_missions: created_missions)
+        @mission.user.update(current_missions: current_missions)
+
         begin
           @mission.save!
         rescue ActiveRecord::RecordInvalid
@@ -92,6 +113,13 @@ class MissionsController < ApplicationController
     @mission.last_clock_out = Date.today
     if @mission.finished_days >= @mission.days
       @mission.finished = true
+      user = @mission.user
+      user_attrs = {}
+      user_attrs[:finished_missions] = user.finished_missions + 1
+      user_attrs[:current_missions] = user.current_missions - 1
+
+      msg = "update user in clock_out failed"
+      logger_update_failed(user, user_attrs, msg)
     end
 
     save_and_return_current_mission
@@ -101,6 +129,13 @@ class MissionsController < ApplicationController
   def abort
     @mission.aborted = true
     @mission.finished = true
+
+    user = @mission.user
+    user_attrs = {}
+    user_attrs[:finished_missions] = user.finished_missions + 1
+    user_attrs[:current_missions] = user.current_missions - 1
+    msg = "update user in abort failed"
+    logger_update_failed(user, user_attrs, msg)
 
     save_and_return_current_mission
   end
@@ -191,6 +226,14 @@ class MissionsController < ApplicationController
         return respond_to do |format|
           format.json { render 'application/err' }
         end
+      end
+    end
+
+    def calculatePercents(numerator, denominator)
+      if denominator <= 0 || numerator > denominator
+        return 0
+      else
+        return (numerator.to_f / denominator)
       end
     end
 
