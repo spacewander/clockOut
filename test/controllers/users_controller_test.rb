@@ -357,4 +357,18 @@ class UsersControllerTest < ActionController::TestCase
     assert_response 404
   end
 
+  # 测试对导航条的展示和更新
+  test "导航条展示内容正确" do
+    session[:user_id] = 1
+    get :show, :id => 1
+    assert_equal 4, assigns(:navbar).num
+    assert_equal users(:one).name, assigns(:navbar).name
+  end
+
+  test "导航条在当前任务数改变后能及时更新" do
+    session[:user_id] = 1
+    get :current_missions, :format => 'json'
+    assert_equal 3, assigns(:navbar).num
+  end
+
 end

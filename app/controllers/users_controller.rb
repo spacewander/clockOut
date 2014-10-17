@@ -35,6 +35,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    update_navbar(@user)
     # 是访客而非页面的主人
     if session[:user_id] != params[:id].to_i
       @user.is_visitor = true
@@ -168,6 +169,7 @@ class UsersController < ApplicationController
   def touch_current_missions
     @missions = @user.missions.where(finished: false)
     update_lost_missions(@missions)
+    update_navbar(@user)
   end
 
   private

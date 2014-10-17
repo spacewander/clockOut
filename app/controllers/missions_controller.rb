@@ -52,6 +52,7 @@ class MissionsController < ApplicationController
         current_missions = @mission.user.current_missions + 1
         @mission.user.update(created_missions: created_missions)
         @mission.user.update(current_missions: current_missions)
+        update_navbar(@mission.user)
 
         begin
           @mission.save!
@@ -120,6 +121,8 @@ class MissionsController < ApplicationController
 
       msg = "update user in clock_out failed"
       logger_update_failed(user, user_attrs, msg)
+
+      update_navbar(@mission.user)
     end
 
     save_and_return_current_mission
@@ -137,6 +140,7 @@ class MissionsController < ApplicationController
     msg = "update user in abort failed"
     logger_update_failed(user, user_attrs, msg)
 
+    update_navbar(@mission.user)
     save_and_return_current_mission
   end
 

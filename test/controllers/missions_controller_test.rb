@@ -212,4 +212,23 @@ class MissionsControllerTest < ActionController::TestCase
     assert ability.can?(:publish, Mission)
   end
 
+  # 测试导航条
+  test "导航条在abort任务之后更新" do
+    session[:user_id] = @mission.user_id
+    get :abort, :id => @mission, :format => 'json'
+    assert_equal 3, assigns(:navbar).num
+  end
+
+  test "导航条在打卡之后更新" do
+    session[:user_id] = missions(:two).user_id
+    get :clock_out, :id => missions(:two), :format => 'json'
+    assert_equal 3, assigns(:navbar).num
+  end
+
+  test "导航条在新增任务之后更新" do
+    post :create, :mission => @input
+    # 因为会发生重定向的缘故，所以不能测试navbar，就用session中的值作为代替
+    assert_equal 5, session[:num] 
+  end
+
 end

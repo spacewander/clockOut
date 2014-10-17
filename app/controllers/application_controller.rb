@@ -47,6 +47,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # 在更新当前任务或修改用户名之后，调用该函数更新导航条
+  def update_navbar(user)
+    push_navbar_info_to_session(user)
+    pop_session_info_to_navbar
+  end
+
   def clean_sessions
     reset_session
   end
