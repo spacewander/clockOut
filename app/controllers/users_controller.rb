@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user_with_params, only: [:show, :edit, :update, :destroy,
                                   :public_current_missions, :public_finished_missions]
   before_action :set_user_with_session, only: [:current_missions, :finished_missions]
-  before_action :pop_session_info_to_navbar, only: [:show, :edit, :index]
+  before_action :pop_session_info_to_navbar, only: [:edit, :index]
   before_action :touch_current_missions, only: [:current_missions, :finished_missions, 
                                                 :public_current_missions, :public_finished_missions]
 

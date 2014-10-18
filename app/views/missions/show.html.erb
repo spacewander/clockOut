@@ -30,17 +30,17 @@
 
 <div id="mission-content-panel">
   <% if @authority == 'hoster' %>
-<!--
   <div id="mission-content" class="content-editable">
     <%= @mission.content %>
   </div>
--->
-<!--  <div id="mission-editor" class="none">-->
+  <div id="mission-editor" class="none">
    <div id="mission-editor">
     <textarea class="form-control" rows="5" maxlength="140" placeholder="不能超过140个字">
       <%= @mission.content %>
     </textarea>
-    <button class="btn btn-default">更新</button>
+    <%= hidden_field_tag(:user_id, @mission.user_id) %>
+    <%= hidden_field_tag(:user_token, @mission.user_token) %>
+    <button id="update-mission" class="btn btn-default">更新</button>
   </div>
   <% else %>
   <div id="mission-content">

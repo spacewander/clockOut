@@ -18,6 +18,7 @@ class MissionsController < ApplicationController
       @authority = 'visitor'
     else
       @authority = 'hoster'
+      @mission.user_token=@mission.user_id
     end
 
     @finished_percents = calculatePercents(@mission.finished_days, @mission.days)
@@ -211,7 +212,7 @@ class MissionsController < ApplicationController
 
     # 目前只允许更新任务内容
     def mission_updateble_params
-      params.require(:user).permit(:content)
+      params.permit(:content)
     end
 
     def authenticate_for_user

@@ -62,6 +62,12 @@
 #mission-editor {
   position: relative;
   
+  textarea {
+    font-size: 20px;
+    line-height: 28px;
+    text-indent: 0em;
+  }
+  
   .btn {
     display: inline;
     position: absolute;
