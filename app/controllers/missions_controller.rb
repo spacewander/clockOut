@@ -15,6 +15,7 @@ class MissionsController < ApplicationController
   # GET /missions/1
   def show
     if session[:user_id] != @mission.user_id
+      return not_found if !@mission.public
       @authority = 'visitor'
     else
       @authority = 'hoster'

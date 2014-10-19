@@ -23,6 +23,20 @@ class MissionsControllerTest < ActionController::TestCase
     assert_response 404
   end
 
+  test "should set authority when showing the mission" do
+    session[:user_id] = missions(:one).user_id
+    get :show, :id => missions(:one)
+    assert_equal 'hoster', assigns(:authority)
+    get :show, :id => missions(:eight)
+    assert_equal 'visitor', assigns(:authority)
+  end
+
+  test "对于访问别人的私有任务的请求，返回404" do
+    session[:user_id] = 2
+    get :show, :id => missions(:one)
+    assert_response 404
+  end
+
   test "should create mission" do
     assert_difference('Mission.count') do
       post :create, :mission => @input
