@@ -4,5 +4,9 @@
 # 不能修改当天之前的心得
 class Feeling < ActiveRecord::Base
   belongs_to :mission
+
+  validates :mission_id, :presence => { message: '不能为空！' }
+  validates :mission_id, numericality: { only_integer: true, greater_than: 0, 
+                                         message: '所给的任务id不正确'}
 end
 

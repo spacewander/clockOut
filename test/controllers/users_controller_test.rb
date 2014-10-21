@@ -17,7 +17,7 @@ class UsersControllerTest < ActionController::TestCase
                        "missedLimit"=>3, "dropOutLimit"=>2, "aborted"=>true, 
                        "finishedDays"=>15, "missedDays"=>3, "dropOutDays"=>2, 
                        "public"=>true}
-  @current_testcase = {"id"=>298486374, "name"=>"刷代码", "days"=>100, 
+  @current_testcase = {"id"=>2, "name"=>"刷代码", "days"=>100, 
                        "missedLimit"=>20, "dropOutLimit"=>10, "finishedDays"=>99, 
                        "missedDays"=>4, "dropOutDays"=>1, "content"=>"就是刷代码", 
                        "aborted"=>false, "finished"=>false, "public"=>true, 

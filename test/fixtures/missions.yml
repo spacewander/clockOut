@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  id: 1
   name: 看书
   days: 30
   finished_days: 11
@@ -17,6 +18,7 @@ one:
   last_clock_out: <%= 1.day.ago.to_s() %>
 
 two:
+  id: 2
   name: 刷代码
   days: 100
   finished_days: 99

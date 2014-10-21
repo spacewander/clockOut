@@ -4,8 +4,14 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
+one:
+  mission_id: 1
+  content: ''
+  created_at: <%= 1.day.ago.to_s() %>
 # column: value
 #
-two: {}
+two:
+  mission_id: 1
+  content: '测试是否只显示某个任务对应的感想'
+  created_at: <%= 12.hour.ago.to_s() %>
 #  column: value

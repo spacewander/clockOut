@@ -31,8 +31,11 @@ class Ability
     return if user.nil?
     if user.is_visitor?
       can :read, Mission, :public => true
+      can :read, Feeling
     else
       can :manage, Mission, :user_id => user.id
+      can :update, Feeling
+      can :create, Feeling
       can :current_missions, User
       can :finished_missions, User
     end

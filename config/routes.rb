@@ -16,6 +16,8 @@ Rails.application.routes.draw do
       get 'abort' => :abort
       get 'publish' => :publish
     end
+
+    resources :feelings
   end
 
   resources :users do
