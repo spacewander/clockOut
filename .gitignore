@@ -1,6 +1,7 @@
 **/Session.vim
 **/*.sw*
 **/.gitkeep
+tags
 
 *.rbc
 capybara-*.html

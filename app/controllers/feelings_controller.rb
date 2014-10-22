@@ -28,6 +28,12 @@ class FeelingsController < ApplicationController
   end
 
   def update
+    if (Time.now - @feeling.created_at) > 1.day
+      return respond_to do |format|
+        format.json { render json: '{ "err": "不能更新当天之前的感想"}' }
+      end
+    end
+
     respond_to do |format|
       if @feeling.update(feeling_updateble_params)
         format.json { render :show, status: :ok }

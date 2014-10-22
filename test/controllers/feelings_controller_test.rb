@@ -12,7 +12,7 @@ class FeelingsControllerTest < ActionController::TestCase
   # 基本的CRUD操作
   test "list all feeling relative to a mission" do
     get :index, :mission_id => 1, :format => 'json'
-    assert_equal 2, json_reponse.length
+    assert_equal 3, json_reponse.length
   end
 
   test "return 404 if wrong mission id given" do
@@ -74,6 +74,16 @@ class FeelingsControllerTest < ActionController::TestCase
     put :update, :id => feelings(:two), :content => feeling[:content],
       :mission_id => feelings(:two).mission_id, :format => 'json'
     assert_equal "测试是否只显示某个任务对应的感想", assigns(:feeling).content
+  end
+
+  test "cannot update feelings which is a day earlier than now" do
+    session[:user_id] = 1
+    feeling = feelings(:three)
+    feeling.content = ""
+    put :update, :id => feelings(:three), :content => feeling[:content],
+      :mission_id => feelings(:three).mission_id, :format => 'json'
+    assert_equal "too old to update", assigns(:feeling).content
+    assert_not_nil json_reponse['err']
   end
 
   # 测试cancan
